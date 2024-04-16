@@ -140,5 +140,15 @@ def logout():
     return redirect("/login")
 
 
+#######################################
+# homepage
+
+@app.get("/")
+def homepage():
+    """Show homepage."""
+
+    return render_template("home.html")
+
+
 ##############################################################################
 # General user routes:
