@@ -9,15 +9,15 @@
       <div class="card user-card">
         <div>
           <div class="image-wrapper">
-            <img src="{{ g.user.header_image_url }}" alt="" class="card-hero">
+            <!-- <img src="{{ g.user.header_image_url }}" alt="" class="card-hero"> -->
           </div>
           <a href="/users/{{ g.user.username }}" class="card-link">
-            <img src="{{ g.user.image_url }}"
+            <img src="{{ g.user.profile_picture_url }}"
                  alt="Image for {{ g.user.username }}"
                  class="card-image">
             <p>@{{ g.user.username }}</p>
           </a>
-          <ul class="user-stats nav nav-pills">
+          <!-- <ul class="user-stats nav nav-pills">
             <li class="stat">
               <p class="small">Messages</p>
               <h4>
@@ -42,12 +42,12 @@
                 </a>
               </h4>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </aside>
 
-    <div class="col-lg-6 col-md-8 col-sm-12">
+    <!-- <div class="col-lg-6 col-md-8 col-sm-12">
       <ul class="list-group" id="messages">
         {% for msg in messages %}
           <li class="list-group-item">
@@ -82,7 +82,7 @@
           </li>
         {% endfor %}
       </ul>
-    </div>
+    </div> -->
 
   </div>
 {% endblock %}

@@ -1,5 +1,9 @@
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
+'''
+accessing and printing value
+os.getenv("MY_KEY")
+'''
 
 from flask import (
     Flask, render_template, request, flash, redirect, session, g, abort,
@@ -7,7 +11,7 @@ from flask import (
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import (CSRFProtection, SignupForm, LoginForm)
+from forms import (CSRFProtection, SignupForm, LoginForm, PictureUploadForm)
 
 from models import (
     db, connect_db, User, Message, DEFAULT_IMAGE_URL, DEFAULT_HEADER_IMAGE_URL)
@@ -147,8 +151,28 @@ def logout():
 def homepage():
     """Show homepage."""
 
+    if not g.user:
+        return render_template('home_anon.html')
+
     return render_template("home.html")
 
 
 ##############################################################################
 # General user routes:
+
+##############################################################################
+# Picture Upload routes:
+
+@app.post('/picture')
+def upload_picture():
+    ''' Uploads a picture '''
+
+    form = PictureUploadForm()
+
+    if form.validate_on_submit():
+
+    pic_url = form.url.data
+
+    # return a rendered
+
+

@@ -94,3 +94,12 @@ class LoginForm(FlaskForm):
         'Password',
         validators=[DataRequired()],
     )
+
+class PictureUploadForm(FlaskForm):
+    """Picture Upload form."""
+
+    url = StringField(
+        'Picture URL',
+        validators=[DataRequired()],
+    )
+
