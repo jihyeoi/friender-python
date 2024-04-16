@@ -11,7 +11,7 @@
           <div class="image-wrapper">
             <img src="{{ g.user.header_image_url }}" alt="" class="card-hero">
           </div>
-          <a href="/users/{{ g.user.id }}" class="card-link">
+          <a href="/users/{{ g.user.username }}" class="card-link">
             <img src="{{ g.user.image_url }}"
                  alt="Image for {{ g.user.username }}"
                  class="card-image">
@@ -21,7 +21,7 @@
             <li class="stat">
               <p class="small">Messages</p>
               <h4>
-                <a href="/users/{{ g.user.id }}">
+                <a href="/users/{{ g.user.username }}">
                   {{ g.user.messages | length }}
                 </a>
               </h4>
@@ -29,7 +29,7 @@
             <li class="stat">
               <p class="small">Following</p>
               <h4>
-                <a href="/users/{{ g.user.id }}/following">
+                <a href="/users/{{ g.user.username }}/following">
                   {{ g.user.following | length }}
                 </a>
               </h4>
@@ -37,7 +37,7 @@
             <li class="stat">
               <p class="small">Followers</p>
               <h4>
-                <a href="/users/{{ g.user.id }}/followers">
+                <a href="/users/{{ g.user.username }}/followers">
                   {{ g.user.followers | length }}
                 </a>
               </h4>

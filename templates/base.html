@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Warbler</title>
+  <title>Friender</title>
 
   <link rel="stylesheet"
         href="https://unpkg.com/bootstrap@5/dist/css/bootstrap.css">
@@ -24,7 +24,7 @@
     <div class="navbar-header">
       <a href="/" class="navbar-brand">
         <img src="/static/images/warbler-logo.png" alt="logo">
-        <span>Warbler</span>
+        <span>Friender</span>
       </a>
     </div>
 
@@ -51,7 +51,7 @@
         <li><a href="/login">Log in</a></li>
       {% else %}
         <li>
-          <a href="/users/{{ g.user.id }}">
+          <a href="/users/{{ g.user.username }}">
             <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
           </a>
         </li>
