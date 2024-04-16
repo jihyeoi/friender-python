@@ -1,0 +1,12 @@
+beautifulsoup4
+Flask<3
+Werkzeug<3
+Flask-Bcrypt
+git+https://github.com/pallets-eco/flask-debugtoolbar
+Flask-SQLAlchemy
+Flask-WTF
+ipython
+psycopg2-binary
+python-dotenv
+email_validator
+packaging
