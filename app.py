@@ -11,7 +11,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 import boto3
 from werkzeug.utils import secure_filename
-from forms import (CSRFProtection, SignupForm, LoginForm, PictureUploadForm, PhotoForm)
+from forms import (CSRFProtection, SignupForm, LoginForm, PhotoForm)
 from models import (
     db, connect_db, User, Message, DEFAULT_IMAGE_URL)
 
