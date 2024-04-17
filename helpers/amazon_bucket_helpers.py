@@ -15,10 +15,10 @@ s3 = boto3.client(
     aws_secret_access_key=SECRET_KEY
 )
 
-def upload_photo(photo):
+def upload_photo(photo, username):
     ''' Takes an image file returns the s3 bucket url '''
     # TODO: take Kadeem advice, save photo with unique name
-    filename = secure_filename(photo.filename)
+    filename = username + secure_filename(photo.filename)
     try:
         s3.upload_fileobj(
             photo,

@@ -1,7 +1,7 @@
 """Forms for Friender."""
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, SelectField, SubmitField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, SubmitField, RadioField
 from wtforms.validators import DataRequired, Email, Length, URL, Optional, InputRequired
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
@@ -29,7 +29,7 @@ class SignupForm(FlaskForm):
     )
 
     last_name = StringField(
-        'First Name',
+        'Last Name',
         validators=[DataRequired()],
     )
 
@@ -57,9 +57,6 @@ class SignupForm(FlaskForm):
         FileRequired(),
         FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
     ])
-    #TODO: MAKE THIS AN UPLOAD FORM
-    # TODO: need default image in static
-    # TODO: ensure the picture is being uploaded to bucket correctly
 
 
 class ProfileEditForm(FlaskForm):
@@ -109,10 +106,8 @@ class LoginForm(FlaskForm):
     )
 
 
-# class PictureUploadForm(FlaskForm):
-#     """Picture Upload form."""
+class SwipeForm(FlaskForm):
+    """Form for swiping"""
 
-#     url = StringField(
-#         'Picture URL',
-#         validators=[DataRequired()],
-#     )
+    left = SubmitField("Do not wish to Friend")
+    right = SubmitField("Send Friend Request!")

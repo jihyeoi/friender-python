@@ -11,7 +11,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 import boto3
 from werkzeug.utils import secure_filename
-from forms import (CSRFProtection, SignupForm, LoginForm, PhotoForm)
+from forms import (CSRFProtection, SignupForm, LoginForm, PhotoForm, SwipeForm)
 from models import (
     db, connect_db, User, Message, DEFAULT_IMAGE_URL)
 from helpers import amazon_bucket_helpers
@@ -97,8 +97,8 @@ def signup():
 
     if form.validate_on_submit():
         try:
-            photo_url = upload_photo(form.photo.data)
-            print('inside try block of app')
+            photo_url = upload_photo(form.photo.data, form.username.data)
+            print('inside try block of app', photo_url)
             user = User.register(
                 username=form.username.data,
                 password=form.password.data,
@@ -111,9 +111,10 @@ def signup():
             )
             print("username in signup is", user.username)
             db.session.commit()
+            print("it hit the commit")
 
-        except IntegrityError:
-            flash("Username already taken", 'danger')
+        except IntegrityError as e:
+            flash(f"An error occurred: {str(e)}", 'danger')
             return render_template('users/signup.html', form=form)
 
         do_login(user)
@@ -176,46 +177,33 @@ def homepage():
 
 
 ##############################################################################
-# General user routes:
+# Swipe routes:
 
+@app.route("/swipes/<int:id>", methods=["GET", "POST"])
+def swipe_results(id):
+    """show swipe pages with buttons and handle results"""
 
-##############################################################################
-# Picture Upload routes:
+    form = SwipeForm()
 
-# @app.post('/picture')
-# def upload_picture():
-#     ''' Uploads a picture '''
+    if not g.user:
+        flash("Please log in to make friends!")
+        return redirect("/")
 
-#     form = PictureUploadForm()
-#     if form.validate_on_submit():
-
-#     pic_url = form.url.data
-
-@app.route("/picture", methods=["GET", "POST"])
-def upload_file():
-    # form = PhotoForm()
+    swipee = User.query.get_or_404(id)
+    print("swipee from swipe route", swipee.first_name)
 
     if form.validate_on_submit():
-        file = form.photo.data
-        filename = secure_filename(file.filename)
-        try:
-            s3.upload_fileobj(
-                file,
-                S3_BUCKET,
-                filename,
-                ExtraArgs={
-                    "ContentType": file.content_type
-                }
-            )
-            photo_url = S3_LOCATION + filename
-        except Exception as e:
-            print("Something Happened: ", e)
-            return redirect(url_for('home'))
-    return render_template('picture.html', form=form)
+        if form.left.data:
+            # Handle 'Do not wish to Friend' logic
+            print("Swiped left")
 
-'''
-1. form
-2. submit form
-2.5. take photo, upload to bucket, return the string url
-3. register is called, goes into db, save url from the bucket
-'''
+        elif form.right.data:
+            # Handle 'Send Friend Request' logic
+            print("Swiped right")
+
+        # Redirect or do something after handling the action
+
+    return render_template("swipes.html",
+                           swipee=swipee,
+                           form=form)
+

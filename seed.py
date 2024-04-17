@@ -20,6 +20,7 @@ user1 = User(
     last_name='banana',
     interests='eating, running, knitting',
     hashed_password="secret",
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg"
 )
 
 user2 = User(
@@ -30,7 +31,8 @@ user2 = User(
     first_name='tim',
     last_name='him',
     interests='nature walks, doing nothing, watching tv',
-    hashed_password="secret"
+    hashed_password="secret",
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/73eca85c-4c88-438c-aed8-9dd02e3288c4.JPG"
 )
 
 user3 = User(
@@ -41,7 +43,8 @@ user3 = User(
     first_name='bob',
     last_name='bobber',
     interests='online shopping, running, gardening',
-    hashed_password="secret"
+    hashed_password="secret",
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg"
 )
 
 db.session.add_all([user1, user2, user3])

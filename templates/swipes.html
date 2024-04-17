@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %} happy swiping! {% endblock %}
+
+{% block content %}
+
+<h1>{{ swipee.first_name }}</h1>
+
+<img src="{{swipee.photo_url}}" alt="image of {{swipee.first_name}}">
+
+<form method="POST" id='swipe_form' action="/swipe_results">
+    {{ form.hidden_tag() }}
+
+    {% for field in form %}
+      {% if field.type != 'HiddenField' %}
+        {% for error in field.errors %}
+          <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+        <div>
+          {{ field() }} <!-- Render the field as a button -->
+        </div>
+      {% endif %}
+    {% endfor %}
+</form>
+
+{% endblock %}

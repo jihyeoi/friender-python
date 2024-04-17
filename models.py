@@ -98,7 +98,7 @@ class User(db.Model):
         )
 
         db.session.add(user)
-        print('end of register block')
+        print('end of register block', user)
         return user
 
     @classmethod
