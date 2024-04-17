@@ -14,6 +14,9 @@ from werkzeug.utils import secure_filename
 from forms import (CSRFProtection, SignupForm, LoginForm, PhotoForm)
 from models import (
     db, connect_db, User, Message, DEFAULT_IMAGE_URL)
+from helpers import amazon_bucket_helpers
+upload_photo = amazon_bucket_helpers.upload_photo
+
 
 load_dotenv()
 S3_KEY = os.getenv("S3_KEY")
@@ -94,15 +97,19 @@ def signup():
 
     if form.validate_on_submit():
         try:
+            photo_url = upload_photo(form.photo.data)
+            print('inside try block of app')
             user = User.register(
                 username=form.username.data,
                 password=form.password.data,
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
                 zip_code=form.zip_code.data,
-                # TODO: PUT AN UPLOAD FORM HERE
-                email=form.email.data
+                photo_url=photo_url,
+                email=form.email.data,
+                interests=form.interests.data
             )
+            print("username in signup is", user.username)
             db.session.commit()
 
         except IntegrityError:
@@ -186,11 +193,9 @@ def homepage():
 
 @app.route("/picture", methods=["GET", "POST"])
 def upload_file():
-    form = PhotoForm()
-    print('$$$$$$$$$$$$$$$$ form is', form)
-    print('$$$$$$$$$$$$$$$$ form data is', form.photo.data)
+    # form = PhotoForm()
+
     if form.validate_on_submit():
-        print('$$$$$$$$$$$$$$$$$$$$$$$$$$ if statement here')
         file = form.photo.data
         filename = secure_filename(file.filename)
         try:
@@ -202,8 +207,15 @@ def upload_file():
                     "ContentType": file.content_type
                 }
             )
-            return redirect(S3_LOCATION + filename)
+            photo_url = S3_LOCATION + filename
         except Exception as e:
             print("Something Happened: ", e)
             return redirect(url_for('home'))
     return render_template('picture.html', form=form)
+
+'''
+1. form
+2. submit form
+2.5. take photo, upload to bucket, return the string url
+3. register is called, goes into db, save url from the bucket
+'''

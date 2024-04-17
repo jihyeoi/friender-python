@@ -17,10 +17,17 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
     username = db.Column(
         db.String(25),
-        primary_key=True
+        unique=True,
+        nullable=False
     )
+
 
     email = db.Column(
         db.String(50),
@@ -52,6 +59,12 @@ class User(db.Model):
         nullable=False
     )
 
+    photo_url = db.Column(
+        db.Text,
+        nullable=False,
+        # TODO: default image
+    )
+
     @classmethod
     def register(cls,
                  username,
@@ -60,6 +73,8 @@ class User(db.Model):
                  last_name,
                  zip_code,
                  password,
+                 interests,
+                 photo_url
                  #TODO: picture upload
                  ):
         """Sign up user.
@@ -69,6 +84,7 @@ class User(db.Model):
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('utf8')
 
+        print('in resgister block')
         user = cls(
             username=username,
             email=email,
@@ -76,10 +92,13 @@ class User(db.Model):
             last_name=last_name,
             zip_code = zip_code,
             hashed_password=hashed_pwd,
+            interests=interests,
+            photo_url=photo_url
             #TODO: picture upload
         )
 
         db.session.add(user)
+        print('end of register block')
         return user
 
     @classmethod

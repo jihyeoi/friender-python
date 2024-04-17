@@ -53,10 +53,13 @@ class SignupForm(FlaskForm):
         validators=[DataRequired()]
     )
 
-    # profile_picture_url = StringField(
-    #     'Image URL',
-    #     validators=[URL(), Optional()],
-    # ) #TODO: MAKE THIS AN UPLOAD FORM
+    photo = FileField('Photo', validators=[
+        FileRequired(),
+        FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
+    ])
+    #TODO: MAKE THIS AN UPLOAD FORM
+    # TODO: need default image in static
+    # TODO: ensure the picture is being uploaded to bucket correctly
 
 
 class ProfileEditForm(FlaskForm):
@@ -106,10 +109,10 @@ class LoginForm(FlaskForm):
     )
 
 
-class PictureUploadForm(FlaskForm):
-    """Picture Upload form."""
+# class PictureUploadForm(FlaskForm):
+#     """Picture Upload form."""
 
-    url = StringField(
-        'Picture URL',
-        validators=[DataRequired()],
-    )
+#     url = StringField(
+#         'Picture URL',
+#         validators=[DataRequired()],
+#     )

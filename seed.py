@@ -10,8 +10,9 @@ db.create_all()
 
 #######################################
 # add users
-
+# TODO: add photo_url
 user1 = User(
+    id=1,
     username='anna',
     email='anna@gmail.com',
     zip_code='92501',
@@ -22,6 +23,7 @@ user1 = User(
 )
 
 user2 = User(
+    id=2,
     username='tim',
     email='tim@gmail.com',
     zip_code='92509',
@@ -32,6 +34,7 @@ user2 = User(
 )
 
 user3 = User(
+    id=3,
     username='bob',
     email='bob@gmail.com',
     zip_code='11565',
