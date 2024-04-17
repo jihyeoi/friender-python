@@ -1,9 +1,3 @@
-<!-- {% extends 'base.html' %}
-
-{% block content %}
-
-{% endblock %} -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +6,8 @@
 </head>
 <body>
     <h1>Upload File to S3</h1>
-    <form method="post" action="/" enctype="multipart/form-data">
+    <form method="POST" action="/picture">
+        {{ form.hidden_tag() }}
         <input type="file" name="file" required>
         <button type="submit">Upload</button>
     </form>

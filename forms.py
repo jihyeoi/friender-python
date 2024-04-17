@@ -1,10 +1,15 @@
 """Forms for Friender."""
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
-from wtforms import SelectField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, URL, Optional, InputRequired
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 
+class PhotoForm(FlaskForm):
+    photo = FileField('Photo', validators=[
+        FileRequired(),
+        FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
+    ])
 
 class CSRFProtection(FlaskForm):
     """CSRFProtection form, intentionally has no fields."""
@@ -35,7 +40,7 @@ class SignupForm(FlaskForm):
 
     zipcode = StringField(
         'Zipcode',
-        validators=[DataRequired(min=6)]
+        validators=[DataRequired(), Length(min=5)]
     )
 
     password = PasswordField(
@@ -73,7 +78,7 @@ class ProfileEditForm(FlaskForm):
 
     zipcode = StringField(
         'Zipcode',
-        validators=[DataRequired(min=6)]
+        validators=[DataRequired(), Length(min=5)]
     )
 
     password = PasswordField(
@@ -95,6 +100,7 @@ class LoginForm(FlaskForm):
         validators=[DataRequired()],
     )
 
+
 class PictureUploadForm(FlaskForm):
     """Picture Upload form."""
 
@@ -102,4 +108,3 @@ class PictureUploadForm(FlaskForm):
         'Picture URL',
         validators=[DataRequired()],
     )
-

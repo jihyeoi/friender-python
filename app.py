@@ -4,23 +4,34 @@ from dotenv import load_dotenv, dotenv_values
 accessing and printing value
 os.getenv("MY_KEY")
 '''
-
 from flask import (
-    Flask, render_template, request, flash, redirect, session, g, abort,
+    Flask, render_template, request, flash, redirect, session, g, abort, url_for
 )
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
-
-from forms import (CSRFProtection, SignupForm, LoginForm, PictureUploadForm)
-
+import boto3
+from werkzeug.utils import secure_filename
+from forms import (CSRFProtection, SignupForm, LoginForm, PictureUploadForm, PhotoForm)
 from models import (
-    db, connect_db, User, Message, DEFAULT_IMAGE_URL, DEFAULT_HEADER_IMAGE_URL)
+    db, connect_db, User, Message, DEFAULT_IMAGE_URL)
 
 load_dotenv()
+S3_KEY = os.getenv("S3_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
+S3_BUCKET = os.getenv("S3_BUCKET")
+S3_LOCATION = os.getenv("S3_LOCATION")
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=S3_KEY,
+    aws_secret_access_key=SECRET_KEY
+)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_ECHO'] = False
@@ -163,16 +174,36 @@ def homepage():
 ##############################################################################
 # Picture Upload routes:
 
-@app.post('/picture')
-def upload_picture():
-    ''' Uploads a picture '''
+# @app.post('/picture')
+# def upload_picture():
+#     ''' Uploads a picture '''
 
-    form = PictureUploadForm()
+#     form = PictureUploadForm()
+#     if form.validate_on_submit():
 
+#     pic_url = form.url.data
+
+@app.route("/picture", methods=["GET", "POST"])
+def upload_file():
+    form = PhotoForm()
+    print('$$$$$$$$$$$$$$$$ form is', form)
+    print('$$$$$$$$$$$$$$$$ form data is', form.photo.data)
     if form.validate_on_submit():
-
-    pic_url = form.url.data
-
-    # return a rendered
-
-
+        print('$$$$$$$$$$$$$$$$$$$$$$$$$$ if statement here')
+        file = form.photo.data
+        filename = secure_filename(file.filename)
+        try:
+            s3.upload_fileobj(
+                file,
+                S3_BUCKET,
+                filename,
+                ExtraArgs={
+                    "ACL": "public-read",
+                    "ContentType": file.content_type
+                }
+            )
+            return redirect(S3_LOCATION + filename)
+        except Exception as e:
+            print("Something Happened: ", e)
+            return redirect(url_for('home'))
+    return render_template('picture.html', form=form)
