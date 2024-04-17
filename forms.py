@@ -38,7 +38,7 @@ class SignupForm(FlaskForm):
         validators=[DataRequired(), Email()],
     )
 
-    zipcode = StringField(
+    zip_code = StringField(
         'Zipcode',
         validators=[DataRequired(), Length(min=5)]
     )
@@ -48,10 +48,15 @@ class SignupForm(FlaskForm):
         validators=[Length(min=6)],
     )
 
-    profile_picture_url = StringField(
-        'Image URL',
-        validators=[URL(), Optional()],
+    interests = TextAreaField(
+        'Interests',
+        validators=[DataRequired()]
     )
+
+    # profile_picture_url = StringField(
+    #     'Image URL',
+    #     validators=[URL(), Optional()],
+    # ) #TODO: MAKE THIS AN UPLOAD FORM
 
 
 class ProfileEditForm(FlaskForm):

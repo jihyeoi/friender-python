@@ -94,13 +94,13 @@ def signup():
 
     if form.validate_on_submit():
         try:
-            user = User.signup(
+            user = User.register(
                 username=form.username.data,
                 password=form.password.data,
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
                 zip_code=form.zip_code.data,
-                profile_picture_url=form.profile_picture_url.data or User.image_url.default.arg,
+                # TODO: PUT AN UPLOAD FORM HERE
                 email=form.email.data
             )
             db.session.commit()
@@ -171,6 +171,7 @@ def homepage():
 ##############################################################################
 # General user routes:
 
+
 ##############################################################################
 # Picture Upload routes:
 
@@ -198,7 +199,6 @@ def upload_file():
                 S3_BUCKET,
                 filename,
                 ExtraArgs={
-                    "ACL": "public-read",
                     "ContentType": file.content_type
                 }
             )

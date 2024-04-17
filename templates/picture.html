@@ -6,9 +6,23 @@
 </head>
 <body>
     <h1>Upload File to S3</h1>
-    <form method="POST" action="/picture">
+    <form method="POST" action="/picture" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
-        <input type="file" name="file" required>
+
+        {% for field in form
+            if field.widget.input_type != 'hidden' %}
+
+            <p>
+                {{ field.label(class="form-label")}}
+                {{ field(class="form-control")}}
+
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+            </p>
+
+            {% endfor %}
+
         <button type="submit">Upload</button>
     </form>
 </body>

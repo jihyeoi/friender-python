@@ -47,10 +47,9 @@ class User(db.Model):
         nullable=False
     )
 
-    profile_picture_url = db.Column(
-        db.String(100),
-        nullable=False,
-        default=DEFAULT_IMAGE_URL
+    interests = db.Column(
+        db.Text,
+        nullable=False
     )
 
     @classmethod
@@ -61,7 +60,8 @@ class User(db.Model):
                  last_name,
                  zip_code,
                  password,
-                 profile_picture_url=None):
+                 #TODO: picture upload
+                 ):
         """Sign up user.
 
         Hashes password and adds user to system.
@@ -76,7 +76,7 @@ class User(db.Model):
             last_name=last_name,
             zip_code = zip_code,
             hashed_password=hashed_pwd,
-            profile_picture_url=profile_picture_url,
+            #TODO: picture upload
         )
 
         db.session.add(user)
@@ -101,49 +101,7 @@ class User(db.Model):
             return False
 
 
-class Interests(db.Model):
-    """A user can have interests"""
-
-    __tablename__ = 'interests'
-
-    interest_id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    name = db.Column(
-        db.String(50),
-        nullable=False
-    )
-
-
-class User_Interests(db.Model):
-    """join table for users and interests """
-
-    __tablename__ = 'user_interests'
-
-    user_interest_id = db.Column(
-        db.Integer,
-        primary_key = True
-    )
-
-    username = db.Column(
-        db.String(25),
-        db.ForeignKey('users.username'),
-        primary_key = True
-    )
-
-    interest_id = db.Column(
-        db.Integer,
-        db.ForeignKey('interests.interest_id'),
-        primary_key = True
-    )
-
-    user = db.relationship('User', backref='user_interests')
-    interests = db.relationship('Interests', backref='interests')
-
-
-class Swipes(db.Model):
+class Swipe(db.Model):
     """a user has swipes"""
 
     __tablename__ = 'swipes'
@@ -166,7 +124,7 @@ class Swipes(db.Model):
     )
 
 
-class Matches(db.Model):
+class Match(db.Model):
     """a user can have matches"""
 
     __tablename__ = 'matches'
@@ -219,3 +177,39 @@ def connect_db(app):
     app.app_context().push()
     db.app = app
     db.init_app(app)
+
+
+
+
+    """in our User model, we are going to add some static methods
+
+1. get location from zip code
+    function: getLocationFromZipCode()
+
+    - geopy (pip install geopy)
+    - from geopy.geocoders import Nominatim
+    - geolocator = Nominatim(user_agent="geoapiExercises")
+    - zipcode = "800011"
+    - location = geolocator.geocode(zipcode)
+
+
+    // or use google maps api
+
+2. find users within that radius
+    function: findUsersInRadius()
+
+
+
+
+Postcodes don't map directly to a distance to each other.
+You will have to acquire postcode & lat/long data,
+look up the postcodes in there, and
+compare the distance between the lat/long coordinates.
+
+
+// getting lat / long from zip code
+>>> from geopy.geocoders import Nominatim
+>>> geolocator = Nominatim(user_agent="specify_your_app_name_here")
+>>> geolocator.geocode({"postalcode": 10117})
+Location(Mitte, Berlin, 10117, Deutschland, (52.5173269733757, 13.3881159334763, 0.0))
+    """
