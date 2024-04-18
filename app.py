@@ -193,11 +193,8 @@ def swipe_results(id):
 
     swiper = g.user
     swipee = User.query.get_or_404(id)
-    print("swipee from swipe route", swipee.first_name)
 
-    print("G.USER", g.user.id)
     Swipe.get_users_list(swiper.id)
-
 
     if form.validate_on_submit():
         print('entered conditional in swipe')
@@ -222,12 +219,16 @@ def swipe_results(id):
                 flash("you have a match!!! check your friends tab for more details", "success")
             print("Swiped right", form.right.data)
 
-        print('after conditionals, before commit')
         db.session.commit()
 
-        next_user_id= get_random_user()
+        # Filters all users down to just swipable users(i.e. not swiped already and not user)
+        # Allows for endless(?) swiping of available users
+        # If no more avaiable users to swipe, renders no more friends page
+        next_user_id = get_random_user(Swipe.get_users_list(g.user.id))
+        if next_user_id == 0:
+            return render_template('no_more_swipes.html')
+
         return redirect(f'/swipes/{next_user_id}')
-        # Redirect or do something after handling the action
 
     return render_template("swipes.html",
                            swipee=swipee,

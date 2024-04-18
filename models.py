@@ -76,7 +76,6 @@ class User(db.Model):
                  password,
                  interests,
                  photo_url
-                 # TODO: picture upload
                  ):
         """Sign up user.
 
@@ -95,7 +94,6 @@ class User(db.Model):
             hashed_password=hashed_pwd,
             interests=interests,
             photo_url=photo_url
-            # TODO: picture upload
         )
 
         db.session.add(user)
@@ -171,7 +169,10 @@ class Swipe(db.Model):
 
     @classmethod
     def get_users_list(cls, user_id):
-        """list of users that logged in user can swipe on"""
+        """
+        list of users that logged in user can swipe on
+        returns a list, list will be [] if swipavble users
+        """
 
         # anyone we have already swiped on, take them out
         # potential friends: have not friended, have not swiped right on
@@ -181,12 +182,13 @@ class Swipe(db.Model):
 
         swiped_user_ids = db.session.query(cls.swipee_id).filter(cls.swiper_id == user_id).subquery()
 
-        available_users = db.session.query(User).filter(User.id != user_id)
-        available_users = available_users.filter(User.id.notin_(swiped_user_ids))
+        all_users = db.session.query(User).filter(User.id != user_id)
+        swipable_users = all_users.filter(User.id.notin_(swiped_user_ids)).all()
 
-        available_users.all() # TODO:gives us a list of user instances
-        # extract user_id from all of the users on the list
+        swipable_users_ids = [user.id for user in swipable_users]
+        print(swipable_users_ids)
 
+        return swipable_users_ids
         # incorporate this into swipe results
         # so that we only redirect to people on this list
 

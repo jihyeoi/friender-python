@@ -10,7 +10,6 @@ db.create_all()
 
 #######################################
 # add users
-# TODO: add photo_url
 user1 = User(
     id=2,
     username='anna',
