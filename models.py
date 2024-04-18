@@ -12,6 +12,7 @@ DEFAULT_IMAGE_URL = (
     "https://icon-library.com/images/default-user-icon/" +
     "default-user-icon-28.jpg")
 
+
 class User(db.Model):
     """user"""
 
@@ -20,6 +21,7 @@ class User(db.Model):
     id = db.Column(
         db.Integer,
         primary_key=True,
+        autoincrement=True
     )
 
     username = db.Column(
@@ -27,7 +29,6 @@ class User(db.Model):
         unique=True,
         nullable=False
     )
-
 
     email = db.Column(
         db.String(50),
@@ -75,7 +76,7 @@ class User(db.Model):
                  password,
                  interests,
                  photo_url
-                 #TODO: picture upload
+                 # TODO: picture upload
                  ):
         """Sign up user.
 
@@ -90,11 +91,11 @@ class User(db.Model):
             email=email,
             first_name=first_name,
             last_name=last_name,
-            zip_code = zip_code,
+            zip_code=zip_code,
             hashed_password=hashed_pwd,
             interests=interests,
             photo_url=photo_url
-            #TODO: picture upload
+            # TODO: picture upload
         )
 
         db.session.add(user)
@@ -125,22 +126,48 @@ class Swipe(db.Model):
 
     __tablename__ = 'swipes'
 
-    swipe_id = db.Column(
+    id = db.Column(
         db.Integer,
-        primary_key = True
+        primary_key=True,
+        autoincrement=True
     )
 
-    swiper_username = db.Column(
-        db.String(25),
-        db.ForeignKey('users.username'),
-        primary_key = True
+    swiper_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False,
     )
 
-    swipee_username = db.Column(
-        db.String(25),
-        db.ForeignKey('users.username'),
-        primary_key = True
+    swipee_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False,
     )
+
+    # right is good, left is bad
+    swipe_direction = db.Column(
+        db.String(5),
+        nullable=False
+    )
+
+    @classmethod
+    def check_for_match(cls, swiper_id, swipee_id):
+        '''
+        Checks swipes of both users to determine if both swiped right, returns a boolean
+        '''
+        print(f'swiper {swiper_id} and swipee {swipee_id}')
+        swipe = cls.query.filter_by(
+            swiper_id=swiper_id, swipee_id=swipee_id).first()
+
+        swipe_back = cls.query.filter_by(
+            swiper_id=swipee_id, swipee_id=swiper_id).first()
+
+        print('swipe is', swipe)
+        print('swipe_back is', swipe_back)
+        if swipe.swipe_direction == 'right' and swipe_back == 'right':
+            return True
+        else:
+            return False
 
 
 class Match(db.Model):
@@ -150,20 +177,32 @@ class Match(db.Model):
 
     match_id = db.Column(
         db.Integer,
-        primary_key = True
+        primary_key=True,
+        autoincrement=True
     )
 
-    first_username = db.Column(
-        db.String(25),
-        db.ForeignKey('users.username'),
-        primary_key = True
+    user1_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False
     )
 
-    second_username = db.Column(
-        db.String(25),
-        db.ForeignKey('users.username'),
-        primary_key = True
+    user2_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False
     )
+
+    @classmethod
+    def make_match(cls, swiper_id, swipee_id):
+        ''' Checks if the two users are already matched, if not, creates new match '''
+        match = cls(
+            swiper_id=swiper_id,
+            swipee_id=swipee_id,
+        )
+
+        db.session.add(match)
+
 
 class Message(db.Model):
     """a user can send and receive messages"""
@@ -172,20 +211,21 @@ class Message(db.Model):
 
     message_id = db.Column(
         db.Integer,
-        primary_key = True
+        primary_key=True
     )
 
     sender_username = db.Column(
         db.String(25),
         db.ForeignKey('users.username'),
-        primary_key = True
+        primary_key=True
     )
 
     receiver_username = db.Column(
         db.String(25),
         db.ForeignKey('users.username'),
-        primary_key = True
+        primary_key=True
     )
+
 
 def connect_db(app):
     """Connect this database to provided Flask app.
@@ -196,9 +236,6 @@ def connect_db(app):
     app.app_context().push()
     db.app = app
     db.init_app(app)
-
-
-
 
     """in our User model, we are going to add some static methods
 

@@ -1,6 +1,6 @@
 """Initial data."""
 
-from models import db, User, Swipe, Match, Message
+from models import db, User, Swipe, Match, Message, Swipe
 
 from app import app
 
@@ -12,7 +12,7 @@ db.create_all()
 # add users
 # TODO: add photo_url
 user1 = User(
-    id=1,
+    id=2,
     username='anna',
     email='anna@gmail.com',
     zip_code='92501',
@@ -24,7 +24,7 @@ user1 = User(
 )
 
 user2 = User(
-    id=2,
+    id=3,
     username='tim',
     email='tim@gmail.com',
     zip_code='92509',
@@ -36,20 +36,30 @@ user2 = User(
 )
 
 user3 = User(
-    id=3,
+    id=4,
     username='bob',
     email='bob@gmail.com',
     zip_code='11565',
     first_name='bob',
     last_name='bobber',
     interests='online shopping, running, gardening',
-    hashed_password="secret",
+    # bob's hashed password equates to 'password'
+    hashed_password="$2b$12$oB1GmibCDWzbMfEWzNsjperI2NRbybHAnodeKbNRFdVa6IDUVstnu",
     photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg"
 )
 
-db.session.add_all([user1, user2, user3])
-db.session.commit()
+swipe1 = Swipe(
+    id=100,
+    swiper_id=2,
+    swipee_id=4,
+    swipe_direction='right'
+)
 
+db.session.add_all([user1, user2, user3])
+
+db.session.commit()
+db.session.add(swipe1)
+db.session.commit()
 
 # #######################################
 # # add cafes

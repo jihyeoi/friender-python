@@ -10,12 +10,14 @@ from flask import (
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 import boto3
+import random
 from werkzeug.utils import secure_filename
 from forms import (CSRFProtection, SignupForm, LoginForm, PhotoForm, SwipeForm)
 from models import (
-    db, connect_db, User, Message, DEFAULT_IMAGE_URL)
-from helpers import amazon_bucket_helpers
+    db, connect_db, User, Match, Swipe, DEFAULT_IMAGE_URL)
+from helpers import amazon_bucket_helpers, database_helpers
 upload_photo = amazon_bucket_helpers.upload_photo
+get_random_user = database_helpers.random_user_id
 
 
 load_dotenv()
@@ -189,21 +191,44 @@ def swipe_results(id):
         flash("Please log in to make friends!")
         return redirect("/")
 
+    swiper = g.user
     swipee = User.query.get_or_404(id)
     print("swipee from swipe route", swipee.first_name)
 
     if form.validate_on_submit():
+        print('entered conditional in swipe')
         if form.left.data:
-            # Handle 'Do not wish to Friend' logic
-            print("Swiped left")
+            swipe_result = Swipe(
+                swiper_id=swiper.id,
+                swipee_id=swipee.id,
+                swipe_direction='left'
+            )
+            db.session.add(swipe_result)
+            print("Swiped left", form.left.data)
 
         elif form.right.data:
-            # Handle 'Send Friend Request' logic
-            print("Swiped right")
+            swipe_result = Swipe(
+                swiper_id=swiper.id,
+                swipee_id=swipee.id,
+                swipe_direction='right'
+            )
+            db.session.add(swipe_result)
+            if (Swipe.check_for_match(swiper_id=swiper.id, swipee_id=swipee.id)):
+                Match.make_match(swiper_id=swiper.id, swipee_id=swipee.id)
+            print("Swiped right", form.right.data)
 
+        print('after conditionals, before commit')
+        db.session.commit()
+
+        next_user_id= get_random_user()
+        return redirect(f'/swipes/{next_user_id}')
         # Redirect or do something after handling the action
 
     return render_template("swipes.html",
                            swipee=swipee,
                            form=form)
+
+
+# function to query a random user
+
 

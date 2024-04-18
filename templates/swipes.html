@@ -8,7 +8,7 @@
 
 <img src="{{swipee.photo_url}}" alt="image of {{swipee.first_name}}">
 
-<form method="POST" id='swipe_form' action="/swipe_results">
+<form method="POST" id='swipe_form' action="/swipes/{{swipee.id}}">
     {{ form.hidden_tag() }}
 
     {% for field in form %}
