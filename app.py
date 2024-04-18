@@ -1,23 +1,18 @@
 import os
-from dotenv import load_dotenv, dotenv_values
-'''
-accessing and printing value
-os.getenv("MY_KEY")
-'''
-from flask import (
-    Flask, render_template, request, flash, redirect, session, g, abort, url_for
-)
+from dotenv import load_dotenv
+from flask import ( Flask, render_template, flash, redirect, session, g )
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 import boto3
-import random
-from werkzeug.utils import secure_filename
-from forms import (CSRFProtection, SignupForm, LoginForm, PhotoForm, SwipeForm)
+
+
+from forms import ( CSRFProtection, SignupForm, LoginForm, PhotoForm, SwipeForm )
 from models import (
-    db, connect_db, User, Match, Swipe, DEFAULT_IMAGE_URL)
-from helpers import amazon_bucket_helpers, database_helpers
+    db, connect_db, User, Match, Swipe, Message, DEFAULT_IMAGE_URL)
+from helpers import amazon_bucket_helpers, database_helpers, api_helpers
 upload_photo = amazon_bucket_helpers.upload_photo
 get_random_user = database_helpers.random_user_id
+get_zips_in_radius = api_helpers.get_zips_in_radius
 
 
 load_dotenv()
@@ -194,7 +189,8 @@ def swipe_results(id):
     swiper = g.user
     swipee = User.query.get_or_404(id)
 
-    Swipe.get_users_list(swiper.id)
+    # TODO: include second param of num_miles for radius check
+    Swipe.get_users_list(swiper.id, 25)
 
     if form.validate_on_submit():
         print('entered conditional in swipe')
@@ -224,7 +220,9 @@ def swipe_results(id):
         # Filters all users down to just swipable users(i.e. not swiped already and not user)
         # Allows for endless(?) swiping of available users
         # If no more avaiable users to swipe, renders no more friends page
-        next_user_id = get_random_user(Swipe.get_users_list(g.user.id))
+        # TODO: include second param of num_miles for radius check
+
+        next_user_id = get_random_user(Swipe.get_users_list(g.user.id, 25))
         if next_user_id == 0:
             return render_template('no_more_swipes.html')
 
@@ -235,6 +233,36 @@ def swipe_results(id):
                            form=form)
 
 
-# function to query a random user
+##############################################################################
+# Radius route:
+
+@app.get('/nearby')
+def get_nearby_friends():
+    pass
+
+# https://www.zipcodeapi.com/rest/{ZIPCODE_API_KEY}/radius.json/{zip_code}/25/miles?minimal
+##############################################################################
+# Message routes:
+
+'''
+@app.get('/messages')
+def get_messages():
+    # fetch msgs from db for specific user
+    # feed list to template
+
+    swipee = Message.query.get_or_404(id)
+'''
 
 
+'''
+# routes:
+    # all your messages: messages,
+    # specific message: messages/id, maybe include reply?
+    # write new message: messages/new
+
+# templates:
+    # messages:
+        # include tabs for sent and received
+    # specific message
+    # new message
+'''

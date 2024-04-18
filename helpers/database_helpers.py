@@ -16,3 +16,6 @@ def random_user_id(available_users):
     # Generate a random number between 1 and the total count of users
 
     return random_id
+
+def get_users_in_radius(zip_codes):
+    ''' Takes a list of zip codes, returns users in those zip codes '''

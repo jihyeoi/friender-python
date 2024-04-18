@@ -1,9 +1,10 @@
 """SQLAlchemy models for Warbler."""
 
 # from datetime import datetime
-
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from helpers import api_helpers
+get_zips_in_radius = api_helpers.get_zips_in_radius
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -168,24 +169,24 @@ class Swipe(db.Model):
             return False
 
     @classmethod
-    def get_users_list(cls, user_id):
+    def get_users_list(cls, user_id, num_miles):
         """
         list of users that logged in user can swipe on
         returns a list, list will be [] if swipavble users
         """
 
-        # anyone we have already swiped on, take them out
-        # potential friends: have not friended, have not swiped right on
-        # enemies : swiped left
-        # filter our database for not enemies and not swiped
-        # thats our list of people we have to swipe
-
-        swiped_user_ids = db.session.query(cls.swipee_id).filter(cls.swiper_id == user_id).subquery()
+        swiped_user_ids = db.session.query(cls.swipee_id).filter(
+            cls.swiper_id == user_id).subquery()
 
         all_users = db.session.query(User).filter(User.id != user_id)
-        swipable_users = all_users.filter(User.id.notin_(swiped_user_ids)).all()
+        swipable_users = all_users.filter(
+            User.id.notin_(swiped_user_ids)).all()
+        # TODO: filter the list to just users in the zip code list
+        user = User.query.get_or_404(user_id)
+        zips_in_radius = get_zips_in_radius(user.zip_code, num_miles)
+        print(zips_in_radius)
 
-        swipable_users_ids = [user.id for user in swipable_users]
+        swipable_users_ids = [user.id for user in swipable_users if user.zip_code in zips_in_radius]
         print(swipable_users_ids)
 
         return swipable_users_ids
@@ -241,16 +242,19 @@ class Message(db.Model):
         primary_key=True
     )
 
-    sender_username = db.Column(
-        db.String(25),
-        db.ForeignKey('users.username'),
-        primary_key=True
+    sender_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
     )
 
-    receiver_username = db.Column(
-        db.String(25),
-        db.ForeignKey('users.username'),
-        primary_key=True
+    receiver_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+    )
+
+    content = db.Column(
+        db.Text,
+        nullable=False
     )
 
 
@@ -264,9 +268,9 @@ def connect_db(app):
     db.app = app
     db.init_app(app)
 
-    """in our User model, we are going to add some static methods
 
-1. get location from zip code
+
+'''1. get location from zip code
     function: getLocationFromZipCode()
 
     - geopy (pip install geopy)
@@ -294,5 +298,5 @@ compare the distance between the lat/long coordinates.
 >>> from geopy.geocoders import Nominatim
 >>> geolocator = Nominatim(user_agent="specify_your_app_name_here")
 >>> geolocator.geocode({"postalcode": 10117})
-Location(Mitte, Berlin, 10117, Deutschland, (52.5173269733757, 13.3881159334763, 0.0))
-    """
+Location(Mitte, Berlin, 10117, Deutschland, (52.5173269733757, 13.3881159334763, 0.0))'''
+
