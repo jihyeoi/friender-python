@@ -233,16 +233,33 @@ def swipe_results(id):
                            form=form)
 
 
-##############################################################################
-# Radius route:
 
-@app.get('/nearby')
-def get_nearby_friends():
-    pass
-
-# https://www.zipcodeapi.com/rest/{ZIPCODE_API_KEY}/radius.json/{zip_code}/25/miles?minimal
 ##############################################################################
 # Message routes:
+
+@app.get("/messages")
+def get_all_messages():
+
+    if not g.user:
+        flash("Please log in to view messages!")
+        return redirect("/")
+
+    # all messages sent by user
+    messages = Message.query.filter_by(sender_id = g.user.id).all()
+    print("USER ID :", g.user.id)
+    print("MESSAGES!!!!", messages)
+
+    return render_template("messages_all.html",
+                           messages=messages)
+
+
+# @app.get("/messages/<int:user_id>")
+# def get_message(user_id):
+
+
+# @app.post("/messages/new")
+# def post_message():
+
 
 '''
 @app.get('/messages')
@@ -265,4 +282,11 @@ def get_messages():
         # include tabs for sent and received
     # specific message
     # new message
+
+
+- thread the messages
+- click on messages
+- shows all of the conversations
+- query : who have i sent messages to
+          who has sent messages to me
 '''

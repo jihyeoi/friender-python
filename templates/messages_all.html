@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %} all messages! {% endblock %}
+
+{% block content %}
+
+<h1>Hi {{ g.user.first_name }}! Here are your messages</h1>
+
+
+{% for message in messages %}
+    <h4>{{ message.receiver.first_name }}</h4>
+    <div>
+        {{ message.content }}
+    </div>
+{% endfor %}
+
+{% endblock %}

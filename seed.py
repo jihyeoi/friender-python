@@ -1,6 +1,7 @@
 """Initial data."""
 
 from models import db, User, Swipe, Match, Message, Swipe
+from datetime import datetime
 
 from app import app
 
@@ -54,11 +55,19 @@ swipe1 = Swipe(
     swipe_direction='right'
 )
 
+message1 = Message(
+    message_id = 1,
+    sender_id = 4,
+    receiver_id=2,
+    content="hi bob! nice to meet ya!"
+)
+
 db.session.add_all([user1, user2, user3])
 
 db.session.commit()
-db.session.add(swipe1)
+db.session.add_all([swipe1, message1])
 db.session.commit()
+#TODO: how do we do these commits
 
 # #######################################
 # # add cafes

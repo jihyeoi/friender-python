@@ -1,6 +1,6 @@
 """SQLAlchemy models for Warbler."""
 
-# from datetime import datetime
+from datetime import datetime
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from helpers import api_helpers
@@ -190,8 +190,6 @@ class Swipe(db.Model):
         print(swipable_users_ids)
 
         return swipable_users_ids
-        # incorporate this into swipe results
-        # so that we only redirect to people on this list
 
 
 class Match(db.Model):
@@ -257,6 +255,14 @@ class Message(db.Model):
         nullable=False
     )
 
+    timestamp = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.now,
+    )
+
+    receiver = db.relationship("User", foreign_keys=[receiver_id], backref="received_messages")
+
 
 def connect_db(app):
     """Connect this database to provided Flask app.
@@ -270,33 +276,4 @@ def connect_db(app):
 
 
 
-'''1. get location from zip code
-    function: getLocationFromZipCode()
-
-    - geopy (pip install geopy)
-    - from geopy.geocoders import Nominatim
-    - geolocator = Nominatim(user_agent="geoapiExercises")
-    - zipcode = "800011"
-    - location = geolocator.geocode(zipcode)
-
-
-    // or use google maps api
-
-2. find users within that radius
-    function: findUsersInRadius()
-
-
-
-
-Postcodes don't map directly to a distance to each other.
-You will have to acquire postcode & lat/long data,
-look up the postcodes in there, and
-compare the distance between the lat/long coordinates.
-
-
-// getting lat / long from zip code
->>> from geopy.geocoders import Nominatim
->>> geolocator = Nominatim(user_agent="specify_your_app_name_here")
->>> geolocator.geocode({"postalcode": 10117})
-Location(Mitte, Berlin, 10117, Deutschland, (52.5173269733757, 13.3881159334763, 0.0))'''
 
