@@ -162,12 +162,33 @@ class Swipe(db.Model):
         swipe_back = cls.query.filter_by(
             swiper_id=swipee_id, swipee_id=swiper_id).first()
 
-        print('swipe is', swipe)
-        print('swipe_back is', swipe_back)
-        if swipe.swipe_direction == 'right' and swipe_back == 'right':
+        print('swipe is', swipe, swipe.swipe_direction)
+        print('swipe_back is', swipe_back, swipe.swipe_direction)
+        if swipe.swipe_direction == 'right' and swipe_back.swipe_direction == 'right':
             return True
         else:
             return False
+
+    @classmethod
+    def get_users_list(cls, user_id):
+        """list of users that logged in user can swipe on"""
+
+        # anyone we have already swiped on, take them out
+        # potential friends: have not friended, have not swiped right on
+        # enemies : swiped left
+        # filter our database for not enemies and not swiped
+        # thats our list of people we have to swipe
+
+        swiped_user_ids = db.session.query(cls.swipee_id).filter(cls.swiper_id == user_id).subquery()
+
+        available_users = db.session.query(User).filter(User.id != user_id)
+        available_users = available_users.filter(User.id.notin_(swiped_user_ids))
+
+        available_users.all() # TODO:gives us a list of user instances
+        # extract user_id from all of the users on the list
+
+        # incorporate this into swipe results
+        # so that we only redirect to people on this list
 
 
 class Match(db.Model):
@@ -196,10 +217,14 @@ class Match(db.Model):
     @classmethod
     def make_match(cls, swiper_id, swipee_id):
         ''' Checks if the two users are already matched, if not, creates new match '''
+        print("from matches, swiper_id:", swiper_id)
+        print("from matches, swipee_id:", swipee_id)
+
         match = cls(
-            swiper_id=swiper_id,
-            swipee_id=swipee_id,
+            user1_id=swiper_id,
+            user2_id=swipee_id,
         )
+        print("match", match)
 
         db.session.add(match)
 

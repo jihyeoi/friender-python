@@ -195,6 +195,10 @@ def swipe_results(id):
     swipee = User.query.get_or_404(id)
     print("swipee from swipe route", swipee.first_name)
 
+    print("G.USER", g.user.id)
+    Swipe.get_users_list(swiper.id)
+
+
     if form.validate_on_submit():
         print('entered conditional in swipe')
         if form.left.data:
@@ -215,6 +219,7 @@ def swipe_results(id):
             db.session.add(swipe_result)
             if (Swipe.check_for_match(swiper_id=swiper.id, swipee_id=swipee.id)):
                 Match.make_match(swiper_id=swiper.id, swipee_id=swipee.id)
+                flash("you have a match!!! check your friends tab for more details", "success")
             print("Swiped right", form.right.data)
 
         print('after conditionals, before commit')
