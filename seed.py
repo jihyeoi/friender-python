@@ -56,16 +56,30 @@ swipe1 = Swipe(
 )
 
 message1 = Message(
-    message_id = 1,
+    message_id = 100,
     sender_id = 4,
     receiver_id=2,
-    content="hi bob! nice to meet ya!"
+    content="should be 1st"
+)
+
+message2 = Message(
+    message_id = 101,
+    sender_id = 3,
+    receiver_id=4,
+    content="should be 2nd"
+)
+
+message3 = Message(
+    message_id = 102,
+    sender_id = 2,
+    receiver_id=4,
+    content="gotta be 3rd"
 )
 
 db.session.add_all([user1, user2, user3])
 
 db.session.commit()
-db.session.add_all([swipe1, message1])
+db.session.add_all([swipe1, message1, message2, message3])
 db.session.commit()
 #TODO: how do we do these commits
 

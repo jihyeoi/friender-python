@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %} all messages! {% endblock %}
+
+{% block content %}
+
+<h1>Hi {{ g.user.first_name }}! Here are your messages</h1>
+
+{% for message in messages %}
+    <h4> {{ message.sender.first_name }}</h4>
+    <p>{{message.content}}</p>
+    <br>
+{% endfor %}
+
+<!-- TODO: add button to compose message -->
+
+{% endblock %}

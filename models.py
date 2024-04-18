@@ -262,6 +262,7 @@ class Message(db.Model):
     )
 
     receiver = db.relationship("User", foreign_keys=[receiver_id], backref="received_messages")
+    sender = db.relationship("User", foreign_keys=[sender_id], backref="sent_messages")
 
 
 def connect_db(app):

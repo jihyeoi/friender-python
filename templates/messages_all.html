@@ -4,14 +4,14 @@
 
 {% block content %}
 
-<h1>Hi {{ g.user.first_name }}! Here are your messages</h1>
+<h1>Hi {{ g.user.first_name }}! Here's your conversation' </h1>
 
-
-{% for message in messages %}
-    <h4>{{ message.receiver.first_name }}</h4>
-    <div>
-        {{ message.content }}
-    </div>
+{% for conversant in conversants %}
+    <h4 id="receiver_sml">
+        <a href="/messages/{{ conversant.id }}" class="rcv-link">
+            {{ conversant.first_name }}
+        </a>
+    </h4>
 {% endfor %}
 
 {% endblock %}

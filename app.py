@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 from flask import ( Flask, render_template, flash, redirect, session, g )
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import desc
 import boto3
-
 
 from forms import ( CSRFProtection, SignupForm, LoginForm, PhotoForm, SwipeForm )
 from models import (
@@ -245,12 +245,53 @@ def get_all_messages():
         return redirect("/")
 
     # all messages sent by user
-    messages = Message.query.filter_by(sender_id = g.user.id).all()
-    print("USER ID :", g.user.id)
-    print("MESSAGES!!!!", messages)
+    messages_sent = Message.query.filter_by(sender_id = g.user.id).all()
+    # all messages rcvd by user
+    messages_received = Message.query.filter_by(receiver_id = g.user.id).all()
+    # TODO: also need to check for messages received from others
+    # g.user may not have responded to messages, need to check both in and out
 
-    return render_template("messages_all.html",
-                           messages=messages)
+    senders = {message.sender for message in messages_received}
+    receivers = {message.receiver for message in messages_sent}
+
+    all_conversants = senders | receivers
+
+    print('senders', senders)
+    print('receivers', receivers)
+    print('all_conversants', all_conversants)
+
+    # message.receiver.first_name
+    # print("USER ID :", g.user.id)
+    # print("MESSAGES!!!!", messages)
+    # order by sent_at
+    # declare a most recent variable
+    # loop over the messages
+    # update the variable whenever we find a more recent message
+
+    return render_template("messages_all.html", conversants=all_conversants)
+
+@app.get("/messages/<int:id>")
+def get_conversation(id):
+
+    messages_received = Message.query.filter_by(sender_id = id, receiver_id =g.user.id).order_by(desc(Message.timestamp)).all()
+    messages_sent = Message.query.filter_by(sender_id = g.user.id, receiver_id =id).order_by(desc(Message.timestamp)).all()
+    print('messages_received', messages_received)
+    print('messages_sent', messages_sent)
+
+    messages = messages_received + messages_sent
+    print('messages', messages)
+    sorted_messages = sorted(messages, key=lambda m: m.message_id)
+
+    print('sorted_messages', sorted_messages)
+    if not g.user:
+        flash("Please log in to view messages!")
+        return redirect("/")
+    # get all messages sent from and to conversant(id)
+    # messages = Message.query.filter_by(sender_id = g.user.id).all()
+    # receivers = {message.receiver for message in messages}
+
+
+    return render_template("conversation.html", messages=sorted_messages)
 
 
 # @app.get("/messages/<int:user_id>")
