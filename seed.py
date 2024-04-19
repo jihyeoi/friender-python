@@ -16,8 +16,8 @@ user1 = User(
     email='anna@gmail.com',
     zip_code='92501',
     first_name='anna',
-    last_name='banana',
-    interests='eating, running, knitting',
+    last_name='the dog',
+    interests='eating, running, fetching',
     hashed_password="secret",
     photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg",
     friend_radius=25
@@ -236,7 +236,7 @@ message7 = Message(
 message8 = Message(
     message_id = 108,
     sender_id = 8,
-    receiver_id=10,
+    receiver_id=4,
     content="Want to train together?"
 )
 
@@ -250,13 +250,13 @@ message9 = Message(
 message10 = Message(
     message_id = 110,
     sender_id = 10,
-    receiver_id=9,
+    receiver_id=4,
     content="Up for a workout?"
 )
 
 message11 = Message(
     message_id = 111,
-    sender_id = 9,
+    sender_id = 4,
     receiver_id=10,
     content="No thanks"
 )
