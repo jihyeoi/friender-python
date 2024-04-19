@@ -1,7 +1,6 @@
 """Initial data."""
 
-from models import db, User, Swipe, Match, Message, Swipe
-from datetime import datetime
+from models import db, User, Swipe, Message, Swipe
 
 from app import app
 
@@ -51,10 +50,137 @@ user3 = User(
     friend_radius=25
 )
 
+user4 = User(
+    id=5,
+    username='officeguy',
+    email='office@gmail.com',
+    zip_code='92507',
+    first_name='jim',
+    last_name='halpert',
+    interests='scheming, pranking people, hanging out with pam',
+    hashed_password="secret",
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/jim.png",
+    friend_radius=25
+)
+
+user5 = User(
+    id=6,
+    username='sherlock',
+    email='sher@gmail.com',
+    zip_code='92504',
+    first_name='sherlock',
+    last_name='holmes',
+    interests='puzzles, violin, deductive reasoning',
+    hashed_password="secret",
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/sherlock.png",
+    friend_radius=25
+)
+
+user6 = User(
+    id=7,
+    username='ironman',
+    email='tony@gmail.com',
+    zip_code='92501',
+    first_name='tony',
+    last_name='stark',
+    interests='racing cars, saving the world, designing technology',
+    hashed_password="secret",
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/tony.jpeg",
+    friend_radius=25
+)
+
+user7 = User(
+    id=8,
+    username='super-saiyan',
+    email='goku@gmail.com',
+    zip_code='92501',
+    first_name='son',
+    last_name='goku',
+    interests='martial arts, eating',
+    hashed_password="secret",
+    photo_url="https://friender-photos-2024.s3.us-east-2.amazonaws.com/goku-dragon-ball-guru-824x490-11b2006-e1697471244240.jpg",
+    friend_radius=25
+)
+
+user8 = User(
+    id=9,
+    username='happy-painter',
+    email='painterly@gmail.com',
+    zip_code='92337',
+    first_name='bob',
+    last_name='ross',
+    interests='painting, teaching, mindfulness',
+    hashed_password="secret",
+    photo_url="https://friender-photos-2024.s3.us-east-2.amazonaws.com/bobearly1_custom-370196c6c7ccc113e242096bb8e7164e96af78f9.jpg",
+    friend_radius=25
+)
+
+user9 = User(
+    id=10,
+    username='rocky',
+    email='the_rock@gmail.com',
+    zip_code='92316',
+    first_name='dwayne',
+    last_name='johnson',
+    interests='fitness, movies, wrestling',
+    hashed_password="$2b$12$oB1GmibCDWzbMfEWzNsjperI2NRbybHAnodeKbNRFdVa6IDUVstnu",
+    photo_url="https://friender-photos-2024.s3.us-east-2.amazonaws.com/7fa2f2009d33fcd5_Baywatch_2.webp",
+    friend_radius=25
+)
+
 swipe1 = Swipe(
     id=100,
     swiper_id=2,
     swipee_id=4,
+    swipe_direction='right'
+)
+
+swipe2 = Swipe(
+    id=101,
+    swiper_id=3,
+    swipee_id=7,
+    swipe_direction='right'
+)
+
+swipe3 = Swipe(
+    id=102,
+    swiper_id=5,
+    swipee_id=2,
+    swipe_direction='left'
+)
+
+swipe4 = Swipe(
+    id=103,
+    swiper_id=6,
+    swipee_id=7,
+    swipe_direction='right'
+)
+
+swipe5 = Swipe(
+    id=104,
+    swiper_id=9,
+    swipee_id=10,
+    swipe_direction='right'
+)
+
+swipe6 = Swipe(
+    id=105,
+    swiper_id=10,
+    swipee_id=9,
+    swipe_direction='right'
+)
+
+swipe7 = Swipe(
+    id=106,
+    swiper_id=10,
+    swipee_id=8,
+    swipe_direction='right'
+)
+
+swipe8 = Swipe(
+    id=107,
+    swiper_id=8,
+    swipee_id=10,
     swipe_direction='right'
 )
 
@@ -79,76 +205,75 @@ message3 = Message(
     content="gotta be 3rd"
 )
 
-db.session.add_all([user1, user2, user3])
+message4 = Message(
+    message_id = 104,
+    sender_id = 6,
+    receiver_id=4,
+    content="hey you"
+)
 
+message5 = Message(
+    message_id = 105,
+    sender_id = 4,
+    receiver_id=7,
+    content="is it true that you know the hulk"
+)
+
+message6 = Message(
+    message_id = 106,
+    sender_id = 4,
+    receiver_id=6,
+    content="I have a mystery for you... "
+)
+
+message7 = Message(
+    message_id = 107,
+    sender_id = 6,
+    receiver_id=4,
+    content="Sorry, I'm on vacation. I'll get back to you in a few days"
+)
+
+message8 = Message(
+    message_id = 108,
+    sender_id = 8,
+    receiver_id=10,
+    content="Want to train together?"
+)
+
+message9 = Message(
+    message_id = 109,
+    sender_id = 10,
+    receiver_id=8,
+    content="You know it"
+)
+
+message10 = Message(
+    message_id = 110,
+    sender_id = 10,
+    receiver_id=9,
+    content="Up for a workout?"
+)
+
+message11 = Message(
+    message_id = 111,
+    sender_id = 9,
+    receiver_id=10,
+    content="No thanks"
+)
+
+message12 = Message(
+    message_id = 112,
+    sender_id = 9,
+    receiver_id=10,
+    content="But if you want to learn to paint..."
+)
+
+db.session.add_all([user1, user2, user3, user4, user5, user6, user7, user8, user9])
 db.session.commit()
-db.session.add_all([swipe1, message1, message2, message3])
+db.session.add_all([swipe1, swipe2, swipe3, swipe4, swipe5, swipe6, swipe7, swipe8])
 db.session.commit()
-#TODO: how do we do these commits
-
-# #######################################
-# # add cafes
-
-# c1 = Cafe(
-#     name="Bernie's Cafe",
-#     description='Serving locals in Noe Valley. A great place to sit and write'
-#         ' and write Rithm exercises.',
-#     address="3966 24th St",
-#     city_code='sf',
-#     url='https://www.yelp.com/biz/bernies-san-francisco',
-#     image_url='https://s3-media4.fl.yelpcdn.com/bphoto/bVCa2JefOCqxQsM6yWrC-A/o.jpg'
-# )
-
-# c2 = Cafe(
-#     name='Perch Coffee',
-#     description='Hip and sleek place to get cardamom lattés when biking'
-#         ' around Oakland.',
-#     address='440 Grand Ave',
-#     city_code='oak',
-#     url='https://perchoffee.com',
-#     image_url='https://s3-media4.fl.yelpcdn.com/bphoto/0vhzcgkzIUIEPIyL2rF_YQ/o.jpg',
-# )
-
-# db.session.add_all([c1, c2])
-# db.session.commit()
-
-# c1.save_map()
-# c2.save_map()
-
-# db.session.commit()
+db.session.add_all([message1, message2, message3, message4, message5, message6,
+                    message7, message8, message9, message10, message11, message12])
+db.session.commit()
 
 
-# #######################################
-# # add users
-
-# ua = User.register(
-#     username="admin",
-#     first_name="Addie",
-#     last_name="MacAdmin",
-#     description="I am the very model of the modern model administrator.",
-#     email="admin@test.com",
-#     password="secret",
-#     admin=True,
-# )
-
-# u1 = User.register(
-#     username="test",
-#     first_name="Testy",
-#     last_name="MacTest",
-#     description="I am the ultimate representative user.",
-#     email="test@test.com",
-#     password="secret",
-# )
-
-# db.session.add_all([u1])
-# db.session.commit()
-
-
-# #######################################
-# # add likes
-
-# u1.liked_cafes.append(c1)
-# u1.liked_cafes.append(c2)
-# ua.liked_cafes.append(c1)
-
-# db.session.commit()

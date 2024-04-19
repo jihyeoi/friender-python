@@ -169,10 +169,9 @@ class Swipe(db.Model):
         swipe_back = cls.query.filter_by(
             swiper_id=swipee_id, swipee_id=swiper_id).first()
 
-        print('swipe is', swipe, swipe.swipe_direction)
-        print('swipe_back is', swipe_back, swipe.swipe_direction)
-        if swipe.swipe_direction == 'right' and swipe_back.swipe_direction == 'right':
-            return True
+        if swipe and swipe_back:
+            if swipe.swipe_direction == 'right' and swipe_back.swipe_direction == 'right':
+                return True
         else:
             return False
 
