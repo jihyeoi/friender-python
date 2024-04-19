@@ -3,8 +3,8 @@
 {% block content %}
   <div>
       <h2 class="signup join-message">Welcome back.</h2>
-      <form method="POST" id="user_form">
-        {{ form.hidden_tag() }}
+      <form class='form' method="POST" id="user_form">
+        {{ g.csrf_form.hidden_tag() }}
         {% for field in form if field.widget.input_type != 'hidden' %}
           {% for error in field.errors %}
             <span class="text-danger">{{ error }}</span>

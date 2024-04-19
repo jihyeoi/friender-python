@@ -1,17 +1,13 @@
 {% extends 'base.html' %}
-
 {% block title %} all messages! {% endblock %}
-
 {% block content %}
-
-<h1>Hi {{ g.user.first_name }}! Here's your conversation' </h1>
-
+<div class="container">
+<h1>Hi {{ g.user.first_name }}! Here are your conversations </h1>
 {% for conversant in conversants %}
-    <h4 id="receiver_sml">
+    <h4 class="message" id="receiver_sml">
         <a href="/messages/{{ conversant.id }}" class="rcv-link">
             {{ conversant.first_name }}
         </a>
     </h4>
 {% endfor %}
-
 {% endblock %}

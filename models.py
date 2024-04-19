@@ -67,6 +67,12 @@ class User(db.Model):
         # TODO: default image
     )
 
+    friend_radius = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+
     @classmethod
     def register(cls,
                  username,
@@ -76,7 +82,8 @@ class User(db.Model):
                  zip_code,
                  password,
                  interests,
-                 photo_url
+                 photo_url,
+                 friend_radius
                  ):
         """Sign up user.
 
@@ -94,7 +101,8 @@ class User(db.Model):
             zip_code=zip_code,
             hashed_password=hashed_pwd,
             interests=interests,
-            photo_url=photo_url
+            photo_url=photo_url,
+            friend_radius=friend_radius
         )
 
         db.session.add(user)

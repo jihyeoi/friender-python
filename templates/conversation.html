@@ -1,32 +1,25 @@
 {% extends 'base.html' %}
-
 {% block title %} all messages! {% endblock %}
-
 {% block content %}
-
+<div class="container">
 <h1>Hi {{ g.user.first_name }}! Here are your messages with {{conversant.first_name}}</h1>
-<div>
     {% for message in messages %}
-        <h4> {{ message.sender.first_name }}</h4>
+    <div class="message-convo">
+        <h4> {{ message.sender.first_name }}: </h4>
         <p>{{message.content}}</p>
         <br>
+    </div>
     {% endfor %}
-
-    <form method="POST" id='signup_form' action="/messages/{{conversant.id}}/new">
-        {{ form.hidden_tag() }}
-
+    <form class="form message-form" method="POST" id='signup_form' action="/messages/{{conversant.id}}/new">
+        {{ g.csrf_form.hidden_tag() }}
         {% for field in form if field.widget.input_type != 'hidden' %}
-
         {% for error in field.errors %}
             <span class="text-danger">{{ error }}</span>
         {% endfor %}
-
         {{ field.label(class="form-label")}}
         {{ field(class="form-control") }}
-
         {% endfor %}
-
-        <button class="btn btn-primary btn-lg">Send!</button>
+        <button class="normal-button">Send!</button>
     </form>
 </div>
 {% endblock %}

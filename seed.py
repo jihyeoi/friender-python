@@ -20,7 +20,8 @@ user1 = User(
     last_name='banana',
     interests='eating, running, knitting',
     hashed_password="secret",
-    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg"
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg",
+    friend_radius=25
 )
 
 user2 = User(
@@ -32,7 +33,8 @@ user2 = User(
     last_name='him',
     interests='nature walks, doing nothing, watching tv',
     hashed_password="secret",
-    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/73eca85c-4c88-438c-aed8-9dd02e3288c4.JPG"
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/73eca85c-4c88-438c-aed8-9dd02e3288c4.JPG",
+    friend_radius=25
 )
 
 user3 = User(
@@ -45,7 +47,8 @@ user3 = User(
     interests='online shopping, running, gardening',
     # bob's hashed password equates to 'password'
     hashed_password="$2b$12$oB1GmibCDWzbMfEWzNsjperI2NRbybHAnodeKbNRFdVa6IDUVstnu",
-    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg"
+    photo_url="https://frienderphotosforrithm.s3.us-east-2.amazonaws.com/dog.jpeg",
+    friend_radius=25
 )
 
 swipe1 = Swipe(

@@ -17,17 +17,22 @@
 <body class="nav-body">
 
   <nav class="navbar">
-
     <ul class="navbar-nav">
       <li> <a href="/" class="navbar-brand">
           <img src="/static/images/logo.png" alt="logo">
           <span>Friender</span>
         </a></li>
-      <li class="nav-item"><a href="/signup">Sign Up</a></li>
-      <li class="nav-item"><a href="/login">Log In</a></li>
-      <form action="/logout">
-        <li class="nav-item">Log Out</a></li>
+      {% if not g.user %}
+      <li class="nav-item"><a class="nav-text" href="/signup">Sign Up</a></li>
+      <li class="nav-item"><a class="nav-text" href="/login">Log In</a></li>
+      {% else %}
+      <li class="nav-item"><a class="nav-text" href="/messages">View Messages</a></li>
+      <li class="nav-item"><a class="nav-text" href="/profile">My Profile</a></li>
+      <form action="/logout" method="POST">
+        {{ g.csrf_form.hidden_tag() }}
+        <button class="logout-button">Log Out</button>
       </form>
+      {% endif %}
     </ul>
   </nav>
 

@@ -5,7 +5,10 @@
 
   <div class="center">
     <h1>The Retro Social Network </h1>
-    <button class="large-button">Start Friending!!</swipe>
+    <form action="/swipes/new" method="POST">
+      {{ g.csrf_form.hidden_tag() }}
+      <button class="large-button">Start Friending!!</swipe>
+    </form>
 
   </div>
 {% endblock %}

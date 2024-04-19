@@ -22,16 +22,25 @@ button {
   text-align: center;
 }
 
+h2 {
+  text-align: center;
+}
+
 .profile_page {
   padding-top: 30px;
   margin-top: 30px;
-  background-color: rgb(201, 201, 201);
+  margin-bottom: 30px; /* Add bottom margin for consistency */
+  background-color: rgb(201, 201, 201); /* Background color for the profile area */
+  display: flex; /* Using flex to help with centering */
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center-align the child elements */
+  justify-content: center; /* Center content vertically */
 }
 
 .profile_header {
-  display: flex;
-  flex-direction: row;
-  text-align: center;
+  width: 100%; /* Ensures the header takes full width of its container */
+  text-align: center; /* Center text alignment */
+  margin: 20px 0; /* Add some vertical spacing */
 }
 
 /*************************************** FORMS */
@@ -42,7 +51,7 @@ form-body {
   margin: auto;
 }
 
-form {
+.form {
   width: 40%;
   background-color: #c0c0c0; /* Classic Windows 95 light gray background */
   border: 3px solid #000; /* Black border like classic windows */
@@ -78,6 +87,30 @@ input[type="password"]:focus {
   border-color: #808080; /* Dark gray border when focused */
 }
 
+.form-nav {
+  width: auto;
+  background-color: initial;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.form-nav label {
+  margin: 0;
+  margin-right: 0;
+}
+
+.message-form {
+  width: 80%;
+  display: flex; /* Apply flexbox to the form */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: space-between; /* Distribute space between elements */
+}
+
+.message-form-label, .message-form-control {
+  margin-right: 35px;
+}
+
 /*************************************** NAV */
 
 /* Windows 95 Navbar Styles */
@@ -107,7 +140,13 @@ input[type="password"]:focus {
   align-items: center; /* Center items vertically within the navbar */
 }
 
+.nav-text {
+  text-decoration: none;
+  color: #000;
+}
+
 .nav-item {
+  text-decoration: none;
   margin-right: 4px; /* Small gap between buttons */
 }
 
@@ -115,7 +154,7 @@ input[type="password"]:focus {
   margin-right: 0; /* No gap after the last item */
 }
 
-.nav-item a {
+.nav-item {
   text-decoration: none;
   color: black;
   font-size: 16px;
@@ -126,13 +165,13 @@ input[type="password"]:focus {
   transition: background-color 0.3s;
 }
 
-.nav-item a:hover {
+.nav-item:hover {
   background-color: #808080; /* Darker gray for hover effect */
   color: white;
 }
 
 /* Styling to mimic the 'inset' look when not hovering */
-.nav-item a:active {
+.nav-item:active {
   border-style: inset;
   position: relative;
   top: 1px; /* Simulate button being pressed down */
@@ -166,7 +205,9 @@ nav ul li {
   padding: 85px 80px;
   font-family: 'Courier New', monospace;
   font-size: 42px;
-  border: 2px outset #c0c0c0;
+  border: 5px outset #c0c0c0;
+  border-left: 5px outset #ffffff;
+  border-top: 5px outset #ffffff;
   background-color: #c0c0c0;
   color: #000;
   text-align: center;
@@ -178,12 +219,12 @@ nav ul li {
 /* Hover effect */
 .large-button:hover {
   background-color: #7f7f7f; /* Darker green background color */
-  border: 2px inset #c0c0c0;
+  border: 5px inset #c0c0c0;
 }
 
 .large-button:active {
   background-color: #7f7f7f;
-  border: 2px inset #808080;
+  border: 5px inset #808080;
 }
 
 .normal-button {
@@ -191,7 +232,9 @@ nav ul li {
   padding: 20px 20px;
   font-family: 'Courier New', monospace;
   font-size: 12px;
-  border: 2px outset #c0c0c0;
+  border-right: 2px outset #c0c0c0;
+  border-left: 2px outset #ffffff;
+  border-top: 2px outset #ffffff;
   background-color: #c0c0c0;
   color: #000;
   text-align: center;
@@ -201,13 +244,29 @@ nav ul li {
 }
 
 .normal-button:hover {
-  background-color: #7f7f7f; /* Darker green background color */
+  background-color: #7f7f7f;
   border: 2px inset #c0c0c0;
 }
 
 .normal-button:active {
   background-color: #7f7f7f;
   border: 2px inset #808080;
+}
+
+.logout-button {
+  display: block;
+  padding: 6px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  border: 2px outset #c0c0c0;
+  background-color: #c0c0c0;
+  color: #000;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #000;
+  transition: background-color 0.3s;
 }
 
 
@@ -221,6 +280,7 @@ nav ul li {
   position: relative;
   top: 20%;
   left: 50%;
+  width: 30%;
   transform: translateX(-50%);
   text-align: center;
   box-shadow: 5px 5px 0px #000; /* Simulate the classic drop shadow */
@@ -231,4 +291,72 @@ nav ul li {
   color: black;
   font-size: 16px;
   margin: 10px 0;
+}
+
+
+/****************** messages */
+
+.container {
+  width: 80%; /* Use an appropriate width */
+  margin: 20px auto; /* Center the container and add some margin around it */
+  padding: 10px;
+  background-color: #c0c0c0; /* Classic Windows 95 light gray */
+  border: 3px solid #000; /* Solid black border */
+  box-shadow: 5px 5px 0px rgba(0,0,0,0.5); /* Simulate the classic drop shadow */
+}
+
+/* Style individual messages */
+.message {
+  padding: 10px;
+  margin-top: 5px;
+  background-color: #fff; /* White background for messages */
+  border: 2px solid #000; /* Black border around each message */
+  word-wrap: break-word; /* Ensure long words do not break the layout */
+}
+
+.message a {
+  text-decoration: none;
+  color: black;
+}
+
+
+/****************** individual messages */
+.message-convo {
+  padding: 10px;
+  background-color: #fff;
+  border: 2px solid #000;
+  display: flex; /* Align items in a row */
+  align-items: center; /* Center items vertically */
+  margin-bottom: 10px; /* Space between messages */
+}
+.message-convo h4 {
+  margin: 0 10px 0 0; /* Right margin for spacing between name and content */
+  white-space: nowrap; /* Prevent name from wrapping */
+}
+.message-convo p {
+  margin: 0; /* Remove default paragraph margin */
+  flex-grow: 1; /* Allow content to take up remaining space */
+}
+
+/******************* swipe profiles ***/
+.swipe-container {
+  display: flex;
+  align-items: flex-start; /* Align items at the start of the container */
+}
+
+.swipe-image {
+  width: 200px; /* Fixed width for the image */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 20px; /* Space between image and profile info */
+  background-color: #c0c0c0; /* Light gray typical of Windows 95 backgrounds */
+  border: 2px solid #000; /* Dark border for contrast */
+  padding: 3px; /* Space between the image and its border */
+  box-shadow:
+      inset 1px 1px 0 #fff, /* Top and left white shadow */
+      inset -1px -1px 0 #808080, /* Bottom and right dark shadow */
+      1px 1px 0 1px #fff, /* Outer top and left white border */
+      -1px -1px 0 1px #000; /* Outer bottom and right dark border */
+}
+.swipe-info {
+  flex-grow: 1; /* Takes up remaining space */
 }

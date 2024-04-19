@@ -1,15 +1,17 @@
 """Forms for Friender."""
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, SelectField, SubmitField, RadioField
-from wtforms.validators import DataRequired, Email, Length, URL, Optional, InputRequired
+from wtforms import StringField, IntegerField, PasswordField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, InputRequired, Regexp, NumberRange
 from flask_wtf.file import FileField, FileRequired, FileAllowed
+
 
 class PhotoForm(FlaskForm):
     photo = FileField('Photo', validators=[
         FileRequired(),
         FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
     ])
+
 
 class CSRFProtection(FlaskForm):
     """CSRFProtection form, intentionally has no fields."""
@@ -39,8 +41,11 @@ class SignupForm(FlaskForm):
     )
 
     zip_code = StringField(
-        'Zipcode',
-        validators=[DataRequired(), Length(min=5)]
+        "ZIP Code",
+        validators=[
+            DataRequired(),
+            Regexp(r'^\d{5}$', message="Invalid ZIP code. Must be 5 digits.")
+        ]
     )
 
     password = PasswordField(
@@ -58,7 +63,17 @@ class SignupForm(FlaskForm):
         FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
     ])
 
-#TODO: PROFILE EDIT?
+    friend_radius = IntegerField(
+        "Friend Radius",
+        validators=[
+            DataRequired(),
+            NumberRange(min=1, max=25,
+                        message="Value must be between 1 and 25")
+        ])
+
+# TODO: PROFILE EDIT?
+
+
 class ProfileEditForm(FlaskForm):
     """Form for editing a user profile."""
 

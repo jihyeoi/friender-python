@@ -51,8 +51,10 @@ def add_user_to_g():
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
+        print('$$$$$$$$$$$$$$$$$$$$$$$ curr user key in session')
 
     else:
+        print('$$$$$$$$$$$$$$$$$$$$$$$ curr user key NOT in session')
         g.user = None
 
 
@@ -66,12 +68,14 @@ def add_csrf_only_form():
 def do_login(user):
     """Log in user."""
 
+    print('$$$$$$$$$$$$$$$$$$$$$$$ doing login')
     session[CURR_USER_KEY] = user.id
 
 
 def do_logout():
     """Log out user."""
 
+    print('$$$$$$$$$$$$$$$$$$$$$$$ doing logout')
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
@@ -91,7 +95,7 @@ def signup():
     do_logout()
 
     form = SignupForm()
-    #TODO: ADD RADIUS
+    #TODO: ADD RADIUS but later
     if form.validate_on_submit():
         try:
             photo_url = upload_photo(form.photo.data, form.username.data)
@@ -104,14 +108,15 @@ def signup():
                 zip_code=form.zip_code.data,
                 photo_url=photo_url,
                 email=form.email.data,
-                interests=form.interests.data
+                interests=form.interests.data,
+                friend_radius=form.friend_radius.data
             )
             print("username in signup is", user.username)
             db.session.commit()
             print("it hit the commit")
 
-        except IntegrityError as e:
-            flash(f"An error occurred: {str(e)}", 'danger')
+        except IntegrityError:
+            flash(f"That username is already taken, please try again", 'danger')
             return render_template('users/signup.html', form=form)
 
         do_login(user)
@@ -147,7 +152,7 @@ def login():
 @app.post('/logout')
 def logout():
     """Handle logout of user and redirect to homepage."""
-
+    print('$$$$$$$$$$$$$$$$$$$$$$$ g.user', g.user)
     form = g.csrf_form
 
     if not form.validate_on_submit() or not g.user:
@@ -155,7 +160,7 @@ def logout():
         return redirect("/")
 
     do_logout()
-
+    print('$$$$$$$$$$$$$$$$$$$$$$$ after do_logut')
     flash("You have successfully logged out.", 'success')
     return redirect("/login")
 
@@ -166,19 +171,41 @@ def logout():
 @app.get("/")
 def homepage():
     """Show homepage."""
+    form = g.csrf_form
 
     if not g.user:
         return render_template('home_anon.html')
 
-    return render_template("home.html")
+    return render_template("home.html", form=form)
+
+
+#######################################
+# user profile
+
+@app.get("/profile")
+def profile_page():
+    """Show profile page."""
+    if not g.user:
+        return render_template('home_anon.html')
+    return render_template("profile.html")
 
 
 ##############################################################################
 # Swipe routes:
 
-@app.get("/swipes")
+@app.post("/swipes/new")
 def redirect_to_swipes():
     """landing page for swiping"""
+    # TODO: need logic here
+    # get random id from avail users
+    # redirect to swipes id
+
+    next_user_id = get_random_user(Swipe.get_users_list(g.user.id, g.user.friend_radius))
+    if next_user_id == 0:
+        return redirect('/no-more-swipes')
+
+    return redirect(f'/swipes/{next_user_id}')
+
 
 @app.route("/swipes/<int:id>", methods=["GET", "POST"])
 def swipe_results(id):
@@ -192,9 +219,7 @@ def swipe_results(id):
 
     swiper = g.user
     swipee = User.query.get_or_404(id)
-
     # TODO: include second param of num_miles for radius check
-    Swipe.get_users_list(swiper.id, 25)
 
     if form.validate_on_submit():
         print('entered conditional in swipe')
@@ -216,7 +241,7 @@ def swipe_results(id):
             db.session.add(swipe_result)
             if (Swipe.check_for_match(swiper_id=swiper.id, swipee_id=swipee.id)):
                 Match.make_match(swiper_id=swiper.id, swipee_id=swipee.id)
-                flash("you have a match!!! check your friends tab for more details", "success")
+                flash("you have a match!!!", "success")
             print("Swiped right", form.right.data)
 
         db.session.commit()
@@ -224,11 +249,12 @@ def swipe_results(id):
         # Filters all users down to just swipable users(i.e. not swiped already and not user)
         # Allows for endless(?) swiping of available users
         # If no more avaiable users to swipe, renders no more friends page
-        # TODO: include second param of num_miles for radius check
 
-        next_user_id = get_random_user(Swipe.get_users_list(g.user.id, 25))
+        next_user_id = get_random_user(Swipe.get_users_list(swiper.id, g.user.friend_radius)
+)
         if next_user_id == 0:
-            return render_template('no_more_swipes.html')
+            print('############ redirecting to no more swipes')
+            return redirect('/no-more-swipes')
 
         return redirect(f'/swipes/{next_user_id}')
 
@@ -236,7 +262,10 @@ def swipe_results(id):
                            swipee=swipee,
                            form=form)
 
+@app.route("/no-more-swipes", methods=["GET", "POST"])
+def no_swipes():
 
+    return render_template('no_more_swipes.html')
 
 ##############################################################################
 # Message routes:
@@ -332,4 +361,9 @@ def post_message(id):
     flash("could not send message! please try again")
     return redirect("/messages")
 
-
+##############################################################################
+# Error routes:
+@app.errorhandler(404)
+def page_not_found(error):
+    """Custom 404 page."""
+    return render_template('404.html'), 404
