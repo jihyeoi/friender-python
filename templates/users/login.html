@@ -6,7 +6,7 @@
 
   <div class="row justify-content-md-center">
     <div class="col-md-7 col-lg-5">
-      <h2 class="join-message">Welcome back.</h2>
+      <h2 class="signup join-message">Welcome back.</h2>
 
       <form method="POST" id="user_form">
         {{ form.hidden_tag() }}
@@ -17,8 +17,9 @@
           {% endfor %}
           {{ field(placeholder=field.label.text, class="form-control") }}
         {% endfor %}
-
-        <button class="btn btn-primary btn-lg">Log in</button>
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <button class="normal-button">Log in</button>
+        </div>
       </form>
     </div>
   </div>

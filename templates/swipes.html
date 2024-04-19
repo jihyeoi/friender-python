@@ -3,10 +3,10 @@
 {% block title %} happy swiping! {% endblock %}
 
 {% block content %}
-
+<div class="form-body">
 <h1>{{ swipee.first_name }}</h1>
 
-<img src="{{swipee.photo_url}}" alt="image of {{swipee.first_name}}">
+<img class="profile_image" src="{{swipee.photo_url}}" alt="image of {{swipee.first_name}}">
 
 <form method="POST" id='swipe_form' action="/swipes/{{swipee.id}}">
     {{ form.hidden_tag() }}
@@ -22,5 +22,6 @@
       {% endif %}
     {% endfor %}
 </form>
+<div>
 
 {% endblock %}

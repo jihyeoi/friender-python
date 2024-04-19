@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import desc
 import boto3
 
-from forms import ( CSRFProtection, SignupForm, LoginForm, PhotoForm, SwipeForm )
+from forms import ( CSRFProtection, SignupForm, LoginForm, NewMessageForm, SwipeForm )
 from models import (
     db, connect_db, User, Match, Swipe, Message, DEFAULT_IMAGE_URL)
 from helpers import amazon_bucket_helpers, database_helpers, api_helpers
@@ -91,7 +91,7 @@ def signup():
     do_logout()
 
     form = SignupForm()
-
+    #TODO: ADD RADIUS
     if form.validate_on_submit():
         try:
             photo_url = upload_photo(form.photo.data, form.username.data)
@@ -176,6 +176,10 @@ def homepage():
 ##############################################################################
 # Swipe routes:
 
+@app.get("/swipes")
+def redirect_to_swipes():
+    """landing page for swiping"""
+
 @app.route("/swipes/<int:id>", methods=["GET", "POST"])
 def swipe_results(id):
     """show swipe pages with buttons and handle results"""
@@ -239,6 +243,7 @@ def swipe_results(id):
 
 @app.get("/messages")
 def get_all_messages():
+    """get all messages for one user"""
 
     if not g.user:
         flash("Please log in to view messages!")
@@ -272,6 +277,13 @@ def get_all_messages():
 
 @app.get("/messages/<int:id>")
 def get_conversation(id):
+    """get a conversation between user and another user"""
+
+    if not g.user:
+        return redirect('/')
+
+    form = NewMessageForm()
+    conversant = User.query.get_or_404(id)
 
     messages_received = Message.query.filter_by(sender_id = id, receiver_id =g.user.id).order_by(desc(Message.timestamp)).all()
     messages_sent = Message.query.filter_by(sender_id = g.user.id, receiver_id =id).order_by(desc(Message.timestamp)).all()
@@ -291,43 +303,33 @@ def get_conversation(id):
     # receivers = {message.receiver for message in messages}
 
 
-    return render_template("conversation.html", messages=sorted_messages)
+    return render_template("conversation.html",
+                           messages=sorted_messages,
+                           conversant=conversant,
+                           form=form)
 
 
-# @app.get("/messages/<int:user_id>")
-# def get_message(user_id):
+@app.post("/messages/<int:id>/new")
+def post_message(id):
+    """send a new message to user"""
+
+    form = NewMessageForm()
+
+    if form.validate_on_submit:
+        new_message = Message(
+            sender_id=g.user.id,
+            receiver_id=id,
+            content=form.content.data
+        )
+
+        print("NEW MESSAGE", new_message.content)
+
+        db.session.add(new_message)
+        db.session.commit()
+
+        return redirect(f"/messages/{id}")
+
+    flash("could not send message! please try again")
+    return redirect("/messages")
 
 
-# @app.post("/messages/new")
-# def post_message():
-
-
-'''
-@app.get('/messages')
-def get_messages():
-    # fetch msgs from db for specific user
-    # feed list to template
-
-    swipee = Message.query.get_or_404(id)
-'''
-
-
-'''
-# routes:
-    # all your messages: messages,
-    # specific message: messages/id, maybe include reply?
-    # write new message: messages/new
-
-# templates:
-    # messages:
-        # include tabs for sent and received
-    # specific message
-    # new message
-
-
-- thread the messages
-- click on messages
-- shows all of the conversations
-- query : who have i sent messages to
-          who has sent messages to me
-'''

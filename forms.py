@@ -58,7 +58,7 @@ class SignupForm(FlaskForm):
         FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
     ])
 
-
+#TODO: PROFILE EDIT?
 class ProfileEditForm(FlaskForm):
     """Form for editing a user profile."""
 
@@ -111,3 +111,12 @@ class SwipeForm(FlaskForm):
 
     left = SubmitField("Do not wish to Friend")
     right = SubmitField("Send Friend Request!")
+
+
+class NewMessageForm(FlaskForm):
+    """Form for adding new message"""
+
+    content = TextAreaField(
+        "Send a message!",
+        validators=[DataRequired()]
+    )

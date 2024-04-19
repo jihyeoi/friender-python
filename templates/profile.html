@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- home page for logged-in users, for testing purposes -->
+
+  <div class="profile_page row">
+    <h1 class="profile-header display-2">{{ g.user.username }}</h1>
+    <div class="profile_background container text-center">
+      <div class="row row-cols-2">
+        <div class="col">
+            <img class="profile_image" src="{{ g.user.photo_url }}"
+                 alt="Image for {{ g.user.username }}"
+                 class="card-image">
+        </div>
+        <div class="col">
+          <div>
+            Username: {{g.user.username}}
+          </div>
+          <div>
+            First Name: {{g.user.first_name}}
+          </div>
+          <div>
+            Last Name: {{g.user.last_name}}
+          </div>
+          <div>
+            Interests:
+            <div>
+            {{g.user.interests}}
+            </div>
+          </div>
+          <a class="btn btn-light" href="/swipes">Make Friends!</a>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+{% endblock %}

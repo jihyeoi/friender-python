@@ -1,4 +1,211 @@
-img {
-  height: 200px;
+
+
+.signup {
+  padding-top: 30px;
+}
+
+button {
+  padding-top: 10px;
+  margin-top: 15px;
+}
+
+.profile_image {
+  height: auto;
   width: 200px;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.profile_page {
+  padding-top: 30px;
+  margin-top: 30px;
+  background-color: rgb(201, 201, 201);
+}
+
+.profile_header {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+
+/*************************************** FORMS */
+form-body {
+  font-family: 'Courier New', monospace; /* Mimics a common system font */
+  background-color: #008080; /* A typical background color for desktop */
+  color: white; /* Text color */
+  margin: 0;
+  padding: 10px;
+}
+
+form {
+  background-color: #c0c0c0; /* Classic Windows 95 light gray background */
+  padding: 20px;
+  border: 3px solid #000; /* Black border like classic windows */
+}
+
+label {
+  margin-right: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="submit"] {
+  background-color: #fff; /* White background for input fields */
+  border: 2px solid #000; /* Black border for that distinct look */
+  font-family: 'Courier New', monospace;
+  padding: 5px 10px;
+  margin-top: 5px; /* Space between label and input field */
+  display: block; /* Makes each input take a full line */
+}
+
+input[type="submit"] {
+  cursor: pointer; /* Makes it clear the button is clickable */
+  background-color: #000; /* Dark button */
+  color: white; /* Text color */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none; /* Removes default focus outline */
+  border-color: #808080; /* Dark gray border when focused */
+}
+
+/*************************************** NAV */
+
+/* Windows 95 Navbar Styles */
+.nav-body {
+  font-family: 'Courier New', monospace;
+  background-color: #008080; /* Teal background, typical of old interfaces */
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #c0c0c0; /* Classic Windows 95 gray */
+  padding: 10px 0;
+  border: 2px solid #000; /* Black border for authenticity */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.navbar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center; /* Center items vertically within the navbar */
+}
+
+.nav-item {
+  margin-right: 4px; /* Small gap between buttons */
+}
+
+.nav-item:last-child {
+  margin-right: 0; /* No gap after the last item */
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: black;
+  font-size: 16px;
+  padding: 6px 12px;
+  display: block;
+  background-color: #c0c0c0;
+  border: 1px solid #000; /* Black border around each link */
+  transition: background-color 0.3s;
+}
+
+.nav-item a:hover {
+  background-color: #808080; /* Darker gray for hover effect */
+  color: white;
+}
+
+/* Styling to mimic the 'inset' look when not hovering */
+.nav-item a:active {
+  border-style: inset;
+  position: relative;
+  top: 1px; /* Simulate button being pressed down */
+}
+
+
+/*************************************** BUTTONS */
+
+.large-button {
+  display: inline-block;
+  padding: 85px 80px;
+  font-family: 'Courier New', monospace;
+  font-size: 42px;
+  border: 2px outset #c0c0c0;
+  background-color: #c0c0c0;
+  color: #000;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Hover effect */
+.large-button:hover {
+  background-color: #7f7f7f; /* Darker green background color */
+  border: 2px inset #c0c0c0;
+}
+
+.large-button:active {
+  background-color: #7f7f7f;
+  border: 2px inset #808080;
+}
+
+.normal-button {
+  display: inline-block;
+  padding: 20px 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  border: 2px outset #c0c0c0;
+  background-color: #c0c0c0;
+  color: #000;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.normal-button:hover {
+  background-color: #7f7f7f; /* Darker green background color */
+  border: 2px inset #c0c0c0;
+}
+
+.normal-button:active {
+  background-color: #7f7f7f;
+  border: 2px inset #808080;
+}
+
+
+/*************************************** FLASH MESSAGING *****/
+
+
+.flash-message {
+  background-color: #c0c0c0; /* Classic Windows 95 light gray */
+  border: 3px solid #000; /* Solid black border like classic Windows dialogs */
+  padding: 10px 20px;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 5px 5px 0px #000; /* Simulate the classic drop shadow */
+  z-index: 1000; /* Ensure it's on top of other content */
+}
+
+.flash-message p {
+  color: black;
+  font-size: 16px;
+  margin: 10px 0;
 }
