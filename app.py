@@ -6,7 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import desc
 import boto3
 
-from forms import ( CSRFProtection, SignupForm, LoginForm, NewMessageForm, SwipeForm )
+from forms import ( CSRFProtection, SignupForm, LoginForm, NewMessageForm,
+                   SwipeForm, ProfileEditForm )
 from models import (
     db, connect_db, User, Match, Swipe, Message, DEFAULT_IMAGE_URL)
 from helpers import amazon_bucket_helpers, database_helpers, api_helpers
@@ -35,7 +36,7 @@ s3 = boto3.client(
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_ECHO'] = False
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 toolbar = DebugToolbarExtension(app)
 
@@ -95,7 +96,7 @@ def signup():
     do_logout()
 
     form = SignupForm()
-    #TODO: ADD RADIUS but later
+
     if form.validate_on_submit():
         try:
             photo_url = upload_photo(form.photo.data, form.username.data)
@@ -152,7 +153,6 @@ def login():
 @app.post('/logout')
 def logout():
     """Handle logout of user and redirect to homepage."""
-    print('$$$$$$$$$$$$$$$$$$$$$$$ g.user', g.user)
     form = g.csrf_form
 
     if not form.validate_on_submit() or not g.user:
@@ -160,7 +160,6 @@ def logout():
         return redirect("/")
 
     do_logout()
-    print('$$$$$$$$$$$$$$$$$$$$$$$ after do_logut')
     flash("You have successfully logged out.", 'success')
     return redirect("/login")
 
@@ -189,6 +188,38 @@ def profile_page():
         return render_template('home_anon.html')
     return render_template("profile.html")
 
+@app.route("/profile/edit", methods=["GET", "POST"])
+def edit_profile():
+    """edit profile"""
+
+    if not g.user:
+        flash("Please log in to access this page!")
+        return redirect("/login")
+
+    user = g.user
+
+    form = ProfileEditForm(obj=user)
+
+    if form.validate_on_submit():
+        try:
+            # TODO: try to add photo edit
+            user.first_name =form.first_name.data
+            user.last_name=form.last_name.data
+            user.email = form.email.data
+            user.friend_radius = form.friend_radius.data
+            user.interests = form.interests.data
+
+            db.session.commit()
+
+            flash("Profile edited!")
+            return redirect("/profile")
+
+        except IntegrityError as e:
+            flash(f"An error occurred: {str(e)}", 'danger')
+            return render_template('profile_edit.html', form=form)
+
+    return render_template('profile_edit.html', form=form)
+
 
 ##############################################################################
 # Swipe routes:
@@ -196,9 +227,6 @@ def profile_page():
 @app.post("/swipes/new")
 def redirect_to_swipes():
     """landing page for swiping"""
-    # TODO: need logic here
-    # get random id from avail users
-    # redirect to swipes id
 
     next_user_id = get_random_user(Swipe.get_users_list(g.user.id, g.user.friend_radius))
     if next_user_id == 0:
@@ -219,7 +247,6 @@ def swipe_results(id):
 
     swiper = g.user
     swipee = User.query.get_or_404(id)
-    # TODO: include second param of num_miles for radius check
 
     if form.validate_on_submit():
         print('entered conditional in swipe')
@@ -282,25 +309,12 @@ def get_all_messages():
     messages_sent = Message.query.filter_by(sender_id = g.user.id).all()
     # all messages rcvd by user
     messages_received = Message.query.filter_by(receiver_id = g.user.id).all()
-    # TODO: also need to check for messages received from others
-    # g.user may not have responded to messages, need to check both in and out
+
 
     senders = {message.sender for message in messages_received}
     receivers = {message.receiver for message in messages_sent}
 
     all_conversants = senders | receivers
-
-    print('senders', senders)
-    print('receivers', receivers)
-    print('all_conversants', all_conversants)
-
-    # message.receiver.first_name
-    # print("USER ID :", g.user.id)
-    # print("MESSAGES!!!!", messages)
-    # order by sent_at
-    # declare a most recent variable
-    # loop over the messages
-    # update the variable whenever we find a more recent message
 
     return render_template("messages_all.html", conversants=all_conversants)
 

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block body_class %}sign up{% endblock %}
+{% block content %}
+  <div>
+      <h2 class="signup form-body">Edit Your Profile</h2>
+      <form class="form form-body" method="POST" id='profile_edit' action="/profile/edit" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {% for field in form if field.widget.input_type != 'hidden' %}
+          {% for error in field.errors %}
+            <span class="text-danger">{{ error }}</span>
+          {% endfor %}
+          {{ field.label(class="form-label")}}
+          {{ field(class="form-control") }}
+        {% endfor %}
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <button class="normal-button">Submit Changes</button>
+        </div>
+      </form>
+  </div>
+{% endblock %}

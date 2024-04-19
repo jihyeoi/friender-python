@@ -85,14 +85,14 @@ class User(db.Model):
                  photo_url,
                  friend_radius
                  ):
-        """Sign up user.
+        """
+        Sign up user.
 
         Hashes password and adds user to system.
         """
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('utf8')
 
-        print('in resgister block')
         user = cls(
             username=username,
             email=email,
@@ -106,12 +106,12 @@ class User(db.Model):
         )
 
         db.session.add(user)
-        print('end of register block', user)
         return user
 
     @classmethod
     def authenticate(cls, username, password):
-        """Find user with `username` and `password`.
+        """
+        Find user with `username` and `password`.
 
         This is a class method (call it on the class, not an individual user.)
         It searches for a user whose password hash matches this password
@@ -189,7 +189,6 @@ class Swipe(db.Model):
         all_users = db.session.query(User).filter(User.id != user_id)
         swipable_users = all_users.filter(
             User.id.notin_(swiped_user_ids)).all()
-        # TODO: filter the list to just users in the zip code list
         user = User.query.get_or_404(user_id)
         zips_in_radius = get_zips_in_radius(user.zip_code, num_miles)
         print(zips_in_radius)

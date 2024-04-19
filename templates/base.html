@@ -28,6 +28,7 @@
       {% else %}
       <li class="nav-item"><a class="nav-text" href="/messages">View Messages</a></li>
       <li class="nav-item"><a class="nav-text" href="/profile">My Profile</a></li>
+      <li class="nav-item"><a class="nav-text" href="/profile/edit">Edit Profile</a></li>
       <form action="/logout" method="POST">
         {{ g.csrf_form.hidden_tag() }}
         <button class="logout-button">Log Out</button>

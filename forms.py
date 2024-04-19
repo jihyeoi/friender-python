@@ -7,6 +7,7 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 
 class PhotoForm(FlaskForm):
+    ''' Form for uploading image file '''
     photo = FileField('Photo', validators=[
         FileRequired(),
         FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
@@ -71,9 +72,6 @@ class SignupForm(FlaskForm):
                         message="Value must be between 1 and 25")
         ])
 
-# TODO: PROFILE EDIT?
-
-
 class ProfileEditForm(FlaskForm):
     """Form for editing a user profile."""
 
@@ -134,4 +132,31 @@ class NewMessageForm(FlaskForm):
     content = TextAreaField(
         "Send a message!",
         validators=[DataRequired()]
+    )
+
+class ProfileEditForm(FlaskForm):
+    """Form for editing a user profile."""
+
+    first_name = StringField(
+        'First Name',
+        validators=[DataRequired()],
+    )
+
+    last_name = StringField(
+        'First Name',
+        validators=[DataRequired()],
+    )
+
+    email = StringField(
+        'Email',
+        validators=[DataRequired(), Email()],
+    )
+
+    interests = TextAreaField(
+        'Interests',
+        validators=[DataRequired()]
+    )
+
+    friend_radius = IntegerField(
+        "Friend Radius"
     )

@@ -1,8 +1,7 @@
 import random
-from models import User
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
-
+# TODO: not really a database help, just general util function
 
 def random_user_id(available_users):
     '''
@@ -17,7 +16,6 @@ def random_user_id(available_users):
 
     return random_id
 
-def get_users_in_radius(zip_codes):
-    ''' Takes a list of zip codes, returns users in those zip codes '''
+
 
 
