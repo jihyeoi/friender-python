@@ -10,7 +10,7 @@ import boto3
 from forms import ( CSRFProtection, SignupForm, LoginForm, NewMessageForm,
                    SwipeForm, ProfileEditForm )
 from models import (
-    db, connect_db, User, Match, Swipe, Message, DEFAULT_IMAGE_URL)
+    db, connect_db, User, Match, Swipe, Message)
 from helpers import amazon_bucket_helpers, database_helpers, api_helpers
 upload_photo = amazon_bucket_helpers.upload_photo
 get_random_user = database_helpers.random_user_id

@@ -66,7 +66,6 @@ class User(db.Model):
     photo_url = db.Column(
         db.Text,
         nullable=False,
-        # TODO: default image
     )
 
     friend_radius = db.Column(
