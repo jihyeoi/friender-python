@@ -4,6 +4,8 @@ from datetime import datetime
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from helpers import api_helpers
+from sqlalchemy.sql import func
+
 get_zips_in_radius = api_helpers.get_zips_in_radius
 
 bcrypt = Bcrypt()
@@ -207,8 +209,6 @@ class Swipe(db.Model):
             return []
 
         zips_in_radius = get_zips_in_radius(user.zip_code, num_miles)
-        test_zips = get_zips_in_radius(92501, 10)
-        print(test_zips, "TEST!!!!!!!!!!!!")
 
         # users already swiped on
         swiped_user_ids = db.session.query(cls.swipee_id).filter(
@@ -292,6 +292,7 @@ class Message(db.Model):
         db.DateTime,
         nullable=False,
         default=datetime.now,
+        server_default=func.now()
     )
 
     receiver = db.relationship("User", foreign_keys=[receiver_id], backref="received_messages")

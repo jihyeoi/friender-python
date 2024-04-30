@@ -8,7 +8,7 @@
         {{ g.csrf_form.hidden_tag() }}
         <select name="matches_id" id="matches_id" class="normal-button">
           {% for match_id, username in user_matches %}
-            <option class="match_see" value="{{ match_id }}">{{ username }}</option>
+            <option class="match_see wide" value="{{ match_id }}">{{ username }}</option>
           {% endfor %}
         </select>
         <button type="submit" class="normal-button">Send Message</button>

@@ -1,7 +1,4 @@
 import random
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
-# TODO: not really a database help, just general util function
 
 def random_user_id(available_users):
     '''
@@ -11,8 +8,8 @@ def random_user_id(available_users):
     if len(available_users) == 0:
         return 0
 
-    random_id = random.choice(available_users)
     # Generate a random number between 1 and the total count of users
+    random_id = random.choice(available_users)
 
     return random_id
 

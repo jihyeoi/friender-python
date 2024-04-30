@@ -8,7 +8,9 @@
         <h4> {{ message.sender.first_name }}: </h4>
         <p>{{message.content}}</p>
         <br>
+        <small>Sent on {{ message.timestamp.strftime('%m/%d %H:%M') }}</small>
     </div>
+
     {% endfor %}
     <form class="form message-form" method="POST" id='signup_form' action="/messages/{{conversant.id}}/new">
         {{ g.csrf_form.hidden_tag() }}

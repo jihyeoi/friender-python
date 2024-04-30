@@ -180,7 +180,7 @@ def profile_page():
     """Show profile page."""
     if not g.user:
         return render_template('home_anon.html')
-    return render_template("profile.html")
+    return render_template("users/profile.html")
 
 
 @app.route("/profile/edit", methods=["GET", "POST"])
@@ -199,8 +199,7 @@ def edit_profile():
         try:
             if 'photo' in request.files and request.files['photo'].filename != '':
                 photo = request.files['photo']
-                filename = secure_filename(photo)
-                photo_url = upload_photo(filename, user.username)
+                photo_url = upload_photo(photo, user.username)
                 user.photo_url = photo_url
 
             user.first_name =form.first_name.data
@@ -218,9 +217,9 @@ def edit_profile():
         except IntegrityError as e:
             db.session.rollback()
             flash(f"An error occurred: {str(e)}", 'danger')
-            return render_template('profile_edit.html', form=form)
+            return render_template('users/profile_edit.html', form=form)
 
-    return render_template('profile_edit.html', form=form)
+    return render_template('users/profile_edit.html', form=form)
 
 
 ##############################################################################
@@ -266,6 +265,8 @@ def swipe_results(id):
                 swipe_direction='right'
             )
             db.session.add(swipe_result)
+
+            # check for match
             if (Swipe.check_for_match(swiper_id=swiper.id, swipee_id=swipee.id)):
                 Match.make_match(swiper_id=swiper.id, swipee_id=swipee.id)
                 flash("you have a match!!!", "success")
@@ -280,14 +281,14 @@ def swipe_results(id):
 
         return redirect(f'/swipes/{next_user_id}')
 
-    return render_template("swipes.html",
+    return render_template("matching/swipes.html",
                            swipee=swipee,
                            form=form)
 
-@app.route("/no-more-swipes", methods=["GET", "POST"])
+@app.get("/no-more-swipes")
 def no_swipes():
 
-    return render_template('no_more_swipes.html')
+    return render_template('matching/no_more_swipes.html')
 
 ##############################################################################
 # Message routes:
@@ -309,7 +310,7 @@ def get_all_messages():
 
     user_matches = g.user.get_matches()
 
-    return render_template("messages_all.html",
+    return render_template("matching/messages_all.html",
                            conversants=all_conversants,
                            user_matches=user_matches)
 
@@ -320,7 +321,6 @@ def go_to_user_page():
 
     match_id = request.form['matches_id']
     match = Match.query.get(match_id)
-    print(match.user1_id, "MATCH!!!!")
 
     user_id = match.user2_id if match.user1_id == g.user.id else match.user1_id
 
@@ -347,7 +347,7 @@ def get_conversation(id):
         flash("Please log in to view messages!")
         return redirect("/")
 
-    return render_template("conversation.html",
+    return render_template("matching/message.html",
                            messages=sorted_messages,
                            conversant=conversant,
                            form=form)

@@ -5,8 +5,7 @@
 }
 
 button {
-  padding-top: 10px;
-  margin-top: 15px;
+  margin-left: 10px;
 }
 
 .center {
@@ -42,25 +41,6 @@ h2 {
   width: 100%; /* Ensures the header takes full width of its container */
   text-align: center; /* Center text alignment */
   margin: 20px 0; /* Add some vertical spacing */
-}
-
-.globe {
-  width: 80px; /* Set the width */
-  height: 80px; /* Set the height */
-  background-image: url('https://media.istockphoto.com/id/1335407682/vector/world-earth-globe-eight-bit-pixel-art-game-icon.jpg?s=612x612&w=0&k=20&c=_HsPwOfS88zFG4hUCWoLNSJ-7ih6mgdtILUBL76ClaE=');
-  background-size: cover;
-  border-radius: 50%; /* Make it round */
-  animation: spin 8s linear infinite; /* Apply the spinning animation */
-  margin: auto;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 /*************************************** FORMS */
@@ -137,7 +117,7 @@ input[type="password"]:focus {
 /* Windows 95 Navbar Styles */
 .nav-body {
   font-family: 'Courier New', monospace;
-  background-color: #008080; /* Teal background, typical of old interfaces */
+  background-color: #008080;
   margin: 0;
   padding: 0;
 }
@@ -335,6 +315,10 @@ nav ul li {
   word-wrap: break-word; /* Ensure long words do not break the layout */
 }
 
+.wide {
+  width: 80%;
+}
+
 .message a {
   text-decoration: none;
   color: black;
@@ -350,13 +334,16 @@ nav ul li {
   align-items: center; /* Center items vertically */
   margin-bottom: 10px; /* Space between messages */
 }
+
 .message-convo h4 {
   margin: 0 10px 0 0; /* Right margin for spacing between name and content */
   white-space: nowrap; /* Prevent name from wrapping */
 }
+
 .message-convo p {
   margin: 0; /* Remove default paragraph margin */
   flex-grow: 1; /* Allow content to take up remaining space */
+  padding-right: 10px;
 }
 
 /******************* swipe profiles ***/

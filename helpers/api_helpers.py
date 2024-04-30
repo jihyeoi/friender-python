@@ -1,9 +1,10 @@
 import os
 import requests
 from dotenv import load_dotenv
-load_dotenv()
-ZIPCODE_API_KEY = os.getenv("ZIPCODE_API_KEY")
 
+load_dotenv()
+
+ZIPCODE_API_KEY = os.getenv("ZIPCODE_API_KEY")
 BASE_URL = f'https://www.zipcodeapi.com/rest/{ZIPCODE_API_KEY}/radius.json/'
 
 def get_zips_in_radius(zip_code, num_miles):
