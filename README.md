@@ -6,7 +6,7 @@ Friender is a web-based application inspired by the Tinder model but designed sp
 
 - **User Authentication**: Users can sign up, log in, and log out securely.
 - **Profile Management**: Users can create and edit profiles, including uploading profile photos stored on AWS S3.
-- **Friend Matching**: Swipe functionality to accept or decline potential friends based on geographical proximity.
+- **Friend Matching**: Swipe functionality to accept or decline potential friends based on geographical proximity (utilizes the Zip Code API to determine distance based on zip code).
 - **Messaging**: Once matched, users can send and receive messages with their new friends, enhancing the social connection.
 - **Windows 95 Theme**: A unique, retro user interface that mimics the classic Windows 95 style.
 
