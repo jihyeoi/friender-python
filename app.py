@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
-from flask import ( Flask, render_template, flash, redirect, session, g )
+from flask import ( Flask, request, render_template, flash, redirect, session, g )
 from flask_debugtoolbar import DebugToolbarExtension
+from werkzeug.utils import secure_filename
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import desc
 import boto3
@@ -52,10 +53,8 @@ def add_user_to_g():
 
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
-        print('$$$$$$$$$$$$$$$$$$$$$$$ curr user key in session')
 
     else:
-        print('$$$$$$$$$$$$$$$$$$$$$$$ curr user key NOT in session')
         g.user = None
 
 
@@ -69,14 +68,12 @@ def add_csrf_only_form():
 def do_login(user):
     """Log in user."""
 
-    print('$$$$$$$$$$$$$$$$$$$$$$$ doing login')
     session[CURR_USER_KEY] = user.id
 
 
 def do_logout():
     """Log out user."""
 
-    print('$$$$$$$$$$$$$$$$$$$$$$$ doing logout')
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
@@ -100,7 +97,6 @@ def signup():
     if form.validate_on_submit():
         try:
             photo_url = upload_photo(form.photo.data, form.username.data)
-            print('inside try block of app', photo_url)
             user = User.register(
                 username=form.username.data,
                 password=form.password.data,
@@ -112,9 +108,7 @@ def signup():
                 interests=form.interests.data,
                 friend_radius=form.friend_radius.data
             )
-            print("username in signup is", user.username)
             db.session.commit()
-            print("it hit the commit")
 
         except IntegrityError:
             flash(f"That username is already taken, please try again", 'danger')
@@ -188,6 +182,7 @@ def profile_page():
         return render_template('home_anon.html')
     return render_template("profile.html")
 
+
 @app.route("/profile/edit", methods=["GET", "POST"])
 def edit_profile():
     """edit profile"""
@@ -202,12 +197,18 @@ def edit_profile():
 
     if form.validate_on_submit():
         try:
-            # TODO: try to add photo edit
+            if 'photo' in request.files and request.files['photo'].filename != '':
+                photo = request.files['photo']
+                filename = secure_filename(photo)
+                photo_url = upload_photo(filename, user.username)
+                user.photo_url = photo_url
+
             user.first_name =form.first_name.data
             user.last_name=form.last_name.data
             user.email = form.email.data
             user.friend_radius = form.friend_radius.data
             user.interests = form.interests.data
+            user.zip_code = form.zip_code.data
 
             db.session.commit()
 
@@ -215,6 +216,7 @@ def edit_profile():
             return redirect("/profile")
 
         except IntegrityError as e:
+            db.session.rollback()
             flash(f"An error occurred: {str(e)}", 'danger')
             return render_template('profile_edit.html', form=form)
 
@@ -249,7 +251,6 @@ def swipe_results(id):
     swipee = User.query.get_or_404(id)
 
     if form.validate_on_submit():
-        print('entered conditional in swipe')
         if form.left.data:
             swipe_result = Swipe(
                 swiper_id=swiper.id,
@@ -257,7 +258,6 @@ def swipe_results(id):
                 swipe_direction='left'
             )
             db.session.add(swipe_result)
-            print("Swiped left", form.left.data)
 
         elif form.right.data:
             swipe_result = Swipe(
@@ -269,18 +269,13 @@ def swipe_results(id):
             if (Swipe.check_for_match(swiper_id=swiper.id, swipee_id=swipee.id)):
                 Match.make_match(swiper_id=swiper.id, swipee_id=swipee.id)
                 flash("you have a match!!!", "success")
-            print("Swiped right", form.right.data)
 
         db.session.commit()
 
         # Filters all users down to just swipable users(i.e. not swiped already and not user)
-        # Allows for endless(?) swiping of available users
-        # If no more avaiable users to swipe, renders no more friends page
-
         next_user_id = get_random_user(Swipe.get_users_list(swiper.id, g.user.friend_radius)
 )
         if next_user_id == 0:
-            print('############ redirecting to no more swipes')
             return redirect('/no-more-swipes')
 
         return redirect(f'/swipes/{next_user_id}')
@@ -305,18 +300,32 @@ def get_all_messages():
         flash("Please log in to view messages!")
         return redirect("/")
 
-    # all messages sent by user
-    messages_sent = Message.query.filter_by(sender_id = g.user.id).all()
-    # all messages rcvd by user
-    messages_received = Message.query.filter_by(receiver_id = g.user.id).all()
-
+    messages_sent, messages_received = g.user.get_message()
 
     senders = {message.sender for message in messages_received}
     receivers = {message.receiver for message in messages_sent}
 
     all_conversants = senders | receivers
 
-    return render_template("messages_all.html", conversants=all_conversants)
+    user_matches = g.user.get_matches()
+
+    return render_template("messages_all.html",
+                           conversants=all_conversants,
+                           user_matches=user_matches)
+
+
+@app.post("/messages")
+def go_to_user_page():
+    """processes form info and redirect to user messages"""
+
+    match_id = request.form['matches_id']
+    match = Match.query.get(match_id)
+    print(match.user1_id, "MATCH!!!!")
+
+    user_id = match.user2_id if match.user1_id == g.user.id else match.user1_id
+
+    return redirect(f"/messages/{user_id}")
+
 
 @app.get("/messages/<int:id>")
 def get_conversation(id):
@@ -330,21 +339,13 @@ def get_conversation(id):
 
     messages_received = Message.query.filter_by(sender_id = id, receiver_id =g.user.id).order_by(desc(Message.timestamp)).all()
     messages_sent = Message.query.filter_by(sender_id = g.user.id, receiver_id =id).order_by(desc(Message.timestamp)).all()
-    print('messages_received', messages_received)
-    print('messages_sent', messages_sent)
 
     messages = messages_received + messages_sent
-    print('messages', messages)
     sorted_messages = sorted(messages, key=lambda m: m.message_id)
 
-    print('sorted_messages', sorted_messages)
     if not g.user:
         flash("Please log in to view messages!")
         return redirect("/")
-    # get all messages sent from and to conversant(id)
-    # messages = Message.query.filter_by(sender_id = g.user.id).all()
-    # receivers = {message.receiver for message in messages}
-
 
     return render_template("conversation.html",
                            messages=sorted_messages,
@@ -364,9 +365,6 @@ def post_message(id):
             receiver_id=id,
             content=form.content.data
         )
-
-        print("NEW MESSAGE", new_message.content)
-
         db.session.add(new_message)
         db.session.commit()
 
@@ -377,6 +375,7 @@ def post_message(id):
 
 ##############################################################################
 # Error routes:
+
 @app.errorhandler(404)
 def page_not_found(error):
     """Custom 404 page."""

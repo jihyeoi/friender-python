@@ -9,11 +9,6 @@ button {
   margin-top: 15px;
 }
 
-.profile_image {
-  height: auto;
-  width: 200px;
-}
-
 .center {
   display: flex;
   flex-direction: column;
@@ -24,6 +19,12 @@ button {
 
 h2 {
   text-align: center;
+}
+/*************************** PROFILE PAGE **/
+
+.profile_image {
+  height: auto;
+  width: 200px;
 }
 
 .profile_page {
@@ -41,6 +42,25 @@ h2 {
   width: 100%; /* Ensures the header takes full width of its container */
   text-align: center; /* Center text alignment */
   margin: 20px 0; /* Add some vertical spacing */
+}
+
+.globe {
+  width: 80px; /* Set the width */
+  height: 80px; /* Set the height */
+  background-image: url('https://media.istockphoto.com/id/1335407682/vector/world-earth-globe-eight-bit-pixel-art-game-icon.jpg?s=612x612&w=0&k=20&c=_HsPwOfS88zFG4hUCWoLNSJ-7ih6mgdtILUBL76ClaE=');
+  background-size: cover;
+  border-radius: 50%; /* Make it round */
+  animation: spin 8s linear infinite; /* Apply the spinning animation */
+  margin: auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /*************************************** FORMS */
@@ -71,7 +91,8 @@ input[type="submit"] {
   border: 2px solid #000; /* Black border for that distinct look */
   font-family: 'Courier New', monospace;
   padding: 5px 10px;
-  margin-top: 5px; /* Space between label and input field */
+  margin-top: 2px; /* Space between label and input field */
+  margin-bottom: 5px;
   display: block; /* Makes each input take a full line */
 }
 

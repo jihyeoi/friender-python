@@ -72,7 +72,6 @@ class User(db.Model):
         nullable=False
     )
 
-
     @classmethod
     def register(cls,
                  username,
@@ -126,6 +125,27 @@ class User(db.Model):
             return user
         else:
             return False
+
+    def get_message(self):
+        messages_sent = Message.query.filter_by(sender_id = self.id).all()
+        messages_received = Message.query.filter_by(receiver_id = self.id).all()
+        return messages_sent, messages_received
+
+    def get_matches(self):
+        matches = Match.query.filter(
+            (Match.user1_id == self.id) | (Match.user2_id == self.id)
+        ).all()
+
+        user_matches = []
+
+        for match in matches:
+        # Get the details of the other user in each match
+            other_user_id = match.user2_id if match.user1_id == self.id else match.user1_id
+            other_user = User.query.get(other_user_id)  # Assuming you have a User model with username
+            user_matches.append((match.match_id, other_user.username))
+
+        return user_matches
+
 
 
 class Swipe(db.Model):
@@ -182,18 +202,28 @@ class Swipe(db.Model):
         returns a list, list will be [] if swipavble users
         """
 
-        swiped_user_ids = db.session.query(cls.swipee_id).filter(
-            cls.swiper_id == user_id).subquery()
+        user = User.query.get(user_id)
+        if not user:
+            return []
 
-        all_users = db.session.query(User).filter(User.id != user_id)
-        swipable_users = all_users.filter(
-            User.id.notin_(swiped_user_ids)).all()
-        user = User.query.get_or_404(user_id)
         zips_in_radius = get_zips_in_radius(user.zip_code, num_miles)
-        print(zips_in_radius)
+        test_zips = get_zips_in_radius(92501, 10)
+        print(test_zips, "TEST!!!!!!!!!!!!")
 
-        swipable_users_ids = [user.id for user in swipable_users if user.zip_code in zips_in_radius]
-        print(swipable_users_ids)
+        # users already swiped on
+        swiped_user_ids = db.session.query(cls.swipee_id).filter(
+            cls.swiper_id == user_id
+        ).subquery()
+
+        # get swipable users by filtering out swiped users and those not in desired zip code
+        swipable_users = db.session.query(User.id).filter(
+            User.id != user_id,
+            User.zip_code.in_(zips_in_radius),
+            User.id.notin_(swiped_user_ids)
+        ).all()
+
+        # extract user IDs from query result
+        swipable_users_ids = [user.id for user in swipable_users]
 
         return swipable_users_ids
 
@@ -224,14 +254,11 @@ class Match(db.Model):
     @classmethod
     def make_match(cls, swiper_id, swipee_id):
         ''' Checks if the two users are already matched, if not, creates new match '''
-        print("from matches, swiper_id:", swiper_id)
-        print("from matches, swipee_id:", swipee_id)
 
         match = cls(
             user1_id=swiper_id,
             user2_id=swipee_id,
         )
-        print("match", match)
 
         db.session.add(match)
 

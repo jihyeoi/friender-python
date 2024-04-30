@@ -17,6 +17,7 @@ s3 = boto3.client(
 
 def upload_photo(photo, username):
     ''' Takes an image file returns the s3 bucket url '''
+
     filename = username + secure_filename(photo.filename)
     try:
         s3.upload_fileobj(

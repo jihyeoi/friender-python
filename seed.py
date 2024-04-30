@@ -1,6 +1,6 @@
 """Initial data."""
 
-from models import db, User, Swipe, Message, Swipe
+from models import db, User, Swipe, Message, Swipe, Match
 
 from app import app
 
@@ -106,7 +106,7 @@ user8 = User(
     id=9,
     username='happy-painter',
     email='painterly@gmail.com',
-    zip_code='92337',
+    zip_code='92507',
     first_name='bob',
     last_name='ross',
     interests='painting, teaching, mindfulness',
@@ -119,7 +119,7 @@ user9 = User(
     id=10,
     username='rocky',
     email='the_rock@gmail.com',
-    zip_code='92316',
+    zip_code='92506',
     first_name='dwayne',
     last_name='johnson',
     interests='fitness, movies, wrestling',
@@ -137,52 +137,78 @@ swipe1 = Swipe(
 
 swipe2 = Swipe(
     id=101,
-    swiper_id=3,
+    swiper_id=4,
     swipee_id=7,
     swipe_direction='right'
 )
 
 swipe3 = Swipe(
     id=102,
-    swiper_id=5,
+    swiper_id=4,
     swipee_id=2,
-    swipe_direction='left'
+    swipe_direction='right'
 )
 
 swipe4 = Swipe(
     id=103,
-    swiper_id=6,
-    swipee_id=7,
+    swiper_id=7,
+    swipee_id=4,
     swipe_direction='right'
 )
 
-swipe5 = Swipe(
-    id=104,
-    swiper_id=9,
-    swipee_id=10,
-    swipe_direction='right'
+match1 = Match(
+    match_id = 1,
+    user1_id = 4,
+    user2_id = 2
 )
 
-swipe6 = Swipe(
-    id=105,
-    swiper_id=10,
-    swipee_id=9,
-    swipe_direction='right'
+match2 = Match(
+    match_id = 2,
+    user1_id = 7,
+    user2_id = 4
 )
 
-swipe7 = Swipe(
-    id=106,
-    swiper_id=10,
-    swipee_id=8,
-    swipe_direction='right'
-)
+# swipe3 = Swipe(
+#     id=102,
+#     swiper_id=5,
+#     swipee_id=2,
+#     swipe_direction='left'
+# )
 
-swipe8 = Swipe(
-    id=107,
-    swiper_id=8,
-    swipee_id=10,
-    swipe_direction='right'
-)
+# swipe4 = Swipe(
+#     id=103,
+#     swiper_id=6,
+#     swipee_id=7,
+#     swipe_direction='right'
+# )
+
+# swipe5 = Swipe(
+#     id=104,
+#     swiper_id=9,
+#     swipee_id=10,
+#     swipe_direction='right'
+# )
+
+# swipe6 = Swipe(
+#     id=105,
+#     swiper_id=10,
+#     swipee_id=9,
+#     swipe_direction='right'
+# )
+
+# swipe7 = Swipe(
+#     id=106,
+#     swiper_id=10,
+#     swipee_id=8,
+#     swipe_direction='right'
+# )
+
+# swipe8 = Swipe(
+#     id=107,
+#     swiper_id=8,
+#     swipee_id=10,
+#     swipe_direction='right'
+# )
 
 message1 = Message(
     message_id = 100,
@@ -198,82 +224,83 @@ message2 = Message(
     content="should be 2nd"
 )
 
-message3 = Message(
-    message_id = 102,
-    sender_id = 2,
-    receiver_id=4,
-    content="gotta be 3rd"
-)
+# message3 = Message(
+#     message_id = 102,
+#     sender_id = 2,
+#     receiver_id=4,
+#     content="gotta be 3rd"
+# )
 
-message4 = Message(
-    message_id = 104,
-    sender_id = 6,
-    receiver_id=4,
-    content="hey you"
-)
+# message4 = Message(
+#     message_id = 104,
+#     sender_id = 6,
+#     receiver_id=4,
+#     content="hey you"
+# )
 
-message5 = Message(
-    message_id = 105,
-    sender_id = 4,
-    receiver_id=7,
-    content="is it true that you know the hulk"
-)
+# message5 = Message(
+#     message_id = 105,
+#     sender_id = 4,
+#     receiver_id=7,
+#     content="is it true that you know the hulk"
+# )
 
-message6 = Message(
-    message_id = 106,
-    sender_id = 4,
-    receiver_id=6,
-    content="I have a mystery for you... "
-)
+# message6 = Message(
+#     message_id = 106,
+#     sender_id = 4,
+#     receiver_id=6,
+#     content="I have a mystery for you... "
+# )
 
-message7 = Message(
-    message_id = 107,
-    sender_id = 6,
-    receiver_id=4,
-    content="Sorry, I'm on vacation. I'll get back to you in a few days"
-)
+# message7 = Message(
+#     message_id = 107,
+#     sender_id = 6,
+#     receiver_id=4,
+#     content="Sorry, I'm on vacation. I'll get back to you in a few days"
+# )
 
-message8 = Message(
-    message_id = 108,
-    sender_id = 8,
-    receiver_id=4,
-    content="Want to train together?"
-)
+# message8 = Message(
+#     message_id = 108,
+#     sender_id = 8,
+#     receiver_id=4,
+#     content="Want to train together?"
+# )
 
-message9 = Message(
-    message_id = 109,
-    sender_id = 10,
-    receiver_id=8,
-    content="You know it"
-)
+# message9 = Message(
+#     message_id = 109,
+#     sender_id = 10,
+#     receiver_id=8,
+#     content="You know it"
+# )
 
-message10 = Message(
-    message_id = 110,
-    sender_id = 10,
-    receiver_id=4,
-    content="Up for a workout?"
-)
+# message10 = Message(
+#     message_id = 110,
+#     sender_id = 10,
+#     receiver_id=4,
+#     content="Up for a workout?"
+# )
 
-message11 = Message(
-    message_id = 111,
-    sender_id = 4,
-    receiver_id=10,
-    content="No thanks"
-)
+# message11 = Message(
+#     message_id = 111,
+#     sender_id = 4,
+#     receiver_id=10,
+#     content="No thanks"
+# )
 
-message12 = Message(
-    message_id = 112,
-    sender_id = 9,
-    receiver_id=10,
-    content="But if you want to learn to paint..."
-)
+# message12 = Message(
+#     message_id = 112,
+#     sender_id = 9,
+#     receiver_id=10,
+#     content="But if you want to learn to paint..."
+# )
 
 db.session.add_all([user1, user2, user3, user4, user5, user6, user7, user8, user9])
 db.session.commit()
-db.session.add_all([swipe1, swipe2, swipe3, swipe4, swipe5, swipe6, swipe7, swipe8])
+db.session.add_all([swipe1, swipe2, swipe3, swipe4])
 db.session.commit()
-db.session.add_all([message1, message2, message3, message4, message5, message6,
-                    message7, message8, message9, message10, message11, message12])
+db.session.add_all([message1, message2])
+db.session.commit()
+db.session.add_all([match1, match2])
 db.session.commit()
 
 

@@ -72,38 +72,6 @@ class SignupForm(FlaskForm):
                         message="Value must be between 1 and 25")
         ])
 
-class ProfileEditForm(FlaskForm):
-    """Form for editing a user profile."""
-
-    first_name = StringField(
-        'First Name',
-        validators=[DataRequired()],
-    )
-
-    last_name = StringField(
-        'First Name',
-        validators=[DataRequired()],
-    )
-
-    email = StringField(
-        'Email',
-        validators=[DataRequired(), Email()],
-    )
-
-    image_url = StringField(
-        '(Optional) Image URL',
-    )
-
-    zipcode = StringField(
-        'Zipcode',
-        validators=[DataRequired(), Length(min=5)]
-    )
-
-    password = PasswordField(
-        'Password',
-        validators=[InputRequired(), Length(min=6, max=50)],
-    )
-
 
 class LoginForm(FlaskForm):
     """Login form."""
@@ -159,4 +127,16 @@ class ProfileEditForm(FlaskForm):
 
     friend_radius = IntegerField(
         "Friend Radius"
+    )
+
+    photo = FileField('Photo', validators=[
+        FileAllowed(["heic", "png", "jpg", "jpeg", "webp"], 'Images only!')
+    ])
+
+    zip_code = StringField(
+        'Zipcode',
+        validators=[
+            DataRequired(),
+            Regexp(r'^\d{5}$', message="Invalid ZIP code. Must be 5 digits.")
+        ]
     )
