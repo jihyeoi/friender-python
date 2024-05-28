@@ -17,3 +17,29 @@ Friender is a web-based application inspired by the Tinder model but designed sp
 - **AWS S3**: Cloud service used for image hosting.
 - **Flask-WTF and Jinja2**: Used for form handling and rendering HTML templates, respectively.
 - **CSS**: Custom styles to emulate the Windows 95 look and feel.
+
+## Setting Up the Virtual Environment
+
+To set up a virtual environment for the Flask project and install the necessary dependencies, follow these steps:
+
+1. **Clone the Repository**:
+   ```sh
+   git clone https://github.com/your-username/your-repo-name.git
+   cd your-repo-name
+    ```
+
+2. **Create a Virtual Environment**:
+    ```sh
+    python3 -m venv venv
+    ```
+
+3. **Activate the Virtual Environment**:
+    ```sh
+    source venv/bin/activate
+    ```
+
+4. **Install Dependencies**:
+    ```sh
+    pip3 install -r requirements.txt
+    ```
+
