@@ -12,11 +12,11 @@ Friender is a web-based application inspired by the Tinder model but designed sp
 
 ## Technologies Used
 
-- **Flask**: A lightweight WSGI web application framework used for rapid development.
-- **SQLAlchemy**: ORM used for database operations, integrated with PostgreSQL.
-- **AWS S3**: Cloud service used for image hosting.
-- **Flask-WTF and Jinja2**: Used for form handling and rendering HTML templates, respectively.
-- **CSS**: Custom styles to emulate the Windows 95 look and feel.
+- **Flask**
+- **SQLAlchemy**
+- **AWS S3**
+- **Flask-WTF and Jinja2**
+- **CSS**
 
 ## Setting Up the Virtual Environment
 
